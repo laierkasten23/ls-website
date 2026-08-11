@@ -8,6 +8,8 @@
   /* ---------------------------------------------------------------- */
   /*  Procedural topographic terrain                                   */
   /* ---------------------------------------------------------------- */
+
+  /* A simple PRNG for deterministic terrain generation */
   function mulberry32(a) {
     return function () {
       a |= 0; a = (a + 0x6D2B79F5) | 0;
@@ -17,6 +19,7 @@
     };
   }
 
+  /* Generate points around a ring with a modulated radius */
   function ringPoints(cx, cy, baseR, mod, n, aspect) {
     var pts = [];
     for (var i = 0; i < n; i++) {
@@ -27,6 +30,7 @@
     return pts;
   }
 
+  /* Catmull–Rom spline through a closed set of points */
   function catmullClosed(pts) {
     var n = pts.length, d = "", i;
     for (i = 0; i < n; i++) {
@@ -40,6 +44,7 @@
     return d + "Z";
   }
 
+  /* Create a modulation function from a set of modes */
   function makeMod(modePhases) {
     return function (th) {
       var m = 0;
@@ -50,6 +55,7 @@
     };
   }
 
+  /* Draw the terrain into a given element */
   function drawTerrain(el, seed) {
     if (!el) return;
     var W = 1200, H = 620, rng = mulberry32(seed || 1);
@@ -100,7 +106,7 @@
     phoneTel: "+4917624599271",
     socials: [
       { label: "laierkasten23", glyph: "instagram", url: "https://instagram.com/laierkasten23" },
-      { label: "Lia Schmid", glyph: "linkedin", url: "" }
+      { label: "Lia Schmid", glyph: "linkedin", url: "https://www.linkedin.com/in/lia-schmid-54bb4723a/" }
     ]
   };
 
@@ -132,7 +138,7 @@
         "<p>An interdisciplinary path taught me to borrow ideas across fields. I thrive in enthusiastic teams where people learn from each other, keeping social impact at the centre of technical work.</p>",
       meta: H.meta([H.pill("BCI / EEG research"), H.pill("Sports nutrition"), H.pill("Science communication")]),
       stacks: [
-        { label: "Languages", items: ["German · native", "Portuguese · native", "English · fluent", "Italian · fluent"] },
+        { label: "Languages", items: ["German · native", "Portuguese · native", "English · fluent", "Italian · fluent", "Spanish · basics", "French · basics"] },
         { label: "Programming", items: ["Python", "R", "MATLAB", "bash", "Java"] },
         { label: "Data & tooling", items: ["MySQL", "git", "VS Code", "Singularity"] }
       ]
@@ -142,7 +148,7 @@
       title: "The pause between sessions",
       sub: "Languages, cultures, the outdoors",
       body:
-        "<p>To disconnect I hike in nature and spend time with family and loved ones. I love learning new languages and exploring different cultures — a habit that started with semesters abroad in Lisbon and Milan and never really stopped.</p>",
+        "<p>To disconnect I hike in nature and spend time with family and loved ones. I love learning new languages and exploring different cultures. A habit that started with semesters abroad in Lisbon and Milan and never really stopped.</p>",
       meta: H.meta([H.pill("Hiking"), H.pill("Languages"), H.pill("Travel"), H.pill("Family")]),
     },
     about_easter: {
@@ -150,7 +156,7 @@
       title: "Pit-lane note",
       sub: "A discovery for the curious",
       body:
-        "<p>Every now and then, when the EEG streams are quiet and the models are training, I switch channels to the pit lane. There's something I love about races within races — the fast, precise micro-decisions, the choreography of a tyre change, a team perfectly in tempo. A little motorsport heart hiding in an otherwise organic terrain.</p>" +
+        "<p>Every now and then, when the EEG streams are quiet and the models are training, I switch channels to the pit lane. There's something I love about races within races: The fast, precise micro-decisions, the choreography of a tyre change, a team perfectly in tempo. A little motorsport heart hiding in an otherwise organic terrain.</p>" +
         "<p>(You found a hidden note. That's the kind of detail I hope a careful visitor notices — in a site as in code.)</p>",
       meta: H.meta([H.pill("easter egg", true)])
     },
@@ -222,13 +228,14 @@
       sub: "Five records in the journal log",
       prologue: "<p>Peer-reviewed and submitted work — most recently around subject-independent EEG learning and explainable stress detection.</p>",
       pubs: [
+        { authors: "Ghezzi, O., Burger, J., Schmid, L., D'Amelio, A., Boccignone, G., Lanzarotti, R.", title: "Where the Eyes Move, the Brain Flows: Brain Decoding During Active Reading from Travelling-Wave Geometry", venue: "IEEE TCDS 2026" },
         { authors: "Schmid, L., Burger, J., D'Amelio, Lanzarotti, R.", title: "Investigating Foundation Models, Disentanglement and Latent Alignment for Subject-Independent EEG Learning", venue: "ICMI 2026" },
         { authors: "Schmid, L., Facchi, G., Agnelli, F., Bocca, G., Sacchi, L., Lanzarotti, R.", title: "Choroid Plexus Segmentation in MRI Using the Novel T1×FLAIR Modality and PSU-Mamba: Projective Scan U-Mamba Approach", venue: "Pattern Recognition Letters, Elsevier (2025)" },
         { authors: "Sacchi, L., Arcaro, M., Bocca, G., Schmid, L., et al.", title: "Klotho levels in the cerebrospinal fluid are associated with choroid plexus enlargement in neurodegeneration: a preliminary study", venue: "Frontiers in Aging Neuroscience" },
         { authors: "Agnelli, F., Ghezzi, O., Blandano, G., Burger, J., Facchi, G., Schmid, L.", title: "Enhancing 3D Face Analysis Using Graph Convolutional Networks with Kernel-Attentive Filters", venue: "submitted, ACM/SIGAPP SAC 2025" },
         { authors: "Agnelli, F., Blandano, G., Burger, J., D'Amelio, A., Facchi, G., Ghezzi, O., ... & Schmid, L.", title: "EEG-Based Mental Stress Detection: A Comparative and Explainable Study Across Tasks and Subjects", venue: "ICIAP 2025" }
       ],
-      meta: H.meta([H.pill("5 records")])
+      meta: H.meta([H.pill("6 records")])
     }
   };
 
@@ -417,7 +424,7 @@
       var key = btn.getAttribute("data-open");
       markDiscovered(key);
       btn.classList.add("is-done");
-      openPanel(buildPanel(DATA[key]), btn);
+      openPanel(buildPanel(DATA[key]) + attachedGalleryHTML(key), btn);
     });
   });
   panelClose.addEventListener("click", function () { closePanel(true); });
@@ -653,6 +660,13 @@
     var idx = parseInt(el.getAttribute("data-volidx"), 10);
     if (window.__vols && window.__vols[idx]) {
       var v = window.__vols[idx];
+      var adjoined = [];
+      if (v.adjacentTo) {
+        (window.__vols || []).forEach(function (o, i) {
+          if (o.adjacentTo === v.adjacentTo && i !== idx) adjoined.push(o);
+        });
+      }
+      var docs = adjoined.length ? [{ own: v }, { own: adjoined[0] }] : [];
       var html =
         '<p class="panel-kicker">Community grove</p>' +
         "<h3>" + esc(v.role) + "</h3>" +
@@ -663,13 +677,26 @@
           '<span class="cert-thumb"><img src="' + esc(docThumb(v.doc)) + '" alt="" loading="lazy" onerror="this.closest(\'.cert-thumb\').classList.add(\'no-thumb\')"></span>' +
           '<span class="cert-tile-title">' + esc(v.docLabel || "Certificate") + "</span>" +
           "</button></div>" : "") +
-        (v.doc ? '<div class="panel-actions"><a class="cta cta-quiet" href="' + esc(v.doc) + '" target="_blank" rel="noopener">View ' + esc(v.docLabel || "certificate") + " →</a></div>" : "");
+        (v.doc ? '<div class="panel-actions"><a class="cta cta-quiet" href="' + esc(v.doc) + '" target="_blank" rel="noopener">View ' + esc(v.docLabel || "certificate") + " →</a></div>" : "") +
+        attachedGalleryHTML("vol_" + idx);
       openPanel(html, el);
       var pv = panelBody.querySelector("[data-volpreview]");
       if (pv) pv.addEventListener("click", function () {
-        openViewer([{ src: v.doc, title: v.docLabel || "Certificate", caption: v.role, kind: kindOf(v.doc) }], 0, pv);
+        openViewer(certItemsForVol(v, adjoined), 0, pv);
       });
     }
+  }
+
+  /* The I-HELP and Wizz Air certificates share the "milano marathon" docs
+     row: opening either shows both, adjacent, in the same viewer. */
+  function certItemsForVol(v, adjoined) {
+    var items = [{ src: v.doc, title: v.docLabel || "Certificate", caption: v.role, kind: kindOf(v.doc) }];
+    if (adjoined && adjoined.length) {
+      adjoined.forEach(function (a) {
+        if (a.doc) items.push({ src: a.doc, title: a.docLabel || "Certificate", caption: a.role, kind: kindOf(a.doc) });
+      });
+    }
+    return items;
   }
 
   function loadJson() {
@@ -719,6 +746,7 @@
   /*  Image galleries (rendered from images/images.json)               */
   /* ---------------------------------------------------------------- */
   var imageGroups = {};
+  var attachedGroups = {};
 
   function renderHeroImage(hero) {
     var fig = document.getElementById("heroFigure");
@@ -742,20 +770,55 @@
       '<div class="gg-strip">' + thumbs + "</div></section>";
   }
 
+  /* Flat personal gallery: all "personal" groups merged into one strip,
+     no sub-grouping by hobby type. */
+  function flatPersonalHTML(groups) {
+    var thumbs = [];
+    var total = 0;
+    groups.forEach(function (g) {
+      g.images.forEach(function (im, i) {
+        total++;
+        var alt = im.caption || g.title + " — " + (i + 1);
+        thumbs.push('<button class="g-thumb" data-gallery="' + esc(g.id) + '" data-idx="' + i + '" aria-label="' + esc(alt) + '">' +
+          '<img src="' + esc(im.src) + '" alt="' + esc(alt) + '" loading="lazy" decoding="async"></button>');
+      });
+    });
+    return '<section class="gallery-group" aria-label="Personal">' +
+      '<div class="gg-head"><h3 class="gg-title">Personal <span class="gg-count">' + total + " " + (total === 1 ? "photo" : "photos") + "</span></h3></div>" +
+      '<div class="gg-strip">' + thumbs.join("") + "</div></section>";
+  }
+
   function renderGalleries(data) {
     var boxes = {
       about: document.getElementById("galleryAbout"),
       research: document.getElementById("galleryResearch"),
-      community: document.getElementById("galleryCommunity")
+      community: document.getElementById("galleryCommunity"),
+      personal: document.getElementById("galleryPersonal")
     };
     var groups = (data.groups || []).filter(function (g) { return g.images && g.images.length; });
+    var personal = [];
     groups.forEach(function (g) {
+      imageGroups[g.id] = g;
+      if (g.attachTo) {
+        attachedGroups[g.attachTo] = g;
+        return;
+      }
+      if (g.section === "personal") {
+        personal.push(g);
+        return;
+      }
       var box = boxes[g.section];
       if (!box) return;
-      imageGroups[g.id] = g;
       box.classList.add("has-groups");
       box.innerHTML += galleryGroupHTML(g);
     });
+    if (personal.length) {
+      var pbox = boxes.personal;
+      if (pbox) {
+        pbox.classList.add("has-groups");
+        pbox.innerHTML += flatPersonalHTML(personal);
+      }
+    }
     Object.keys(boxes).forEach(function (key) {
       var box = boxes[key];
       if (!box || !box.classList.contains("has-groups")) return;
@@ -766,12 +829,35 @@
     });
   }
 
+  /* An attached group renders inside its target anchor instead of a section
+     gallery. Returns "" when the target has no attached group. */
+  function attachedGalleryHTML(attachTo) {
+    var g = attachedGroups[attachTo];
+    if (!g || !g.images || !g.images.length) return "";
+    return '<div class="panel-gallery">' + galleryGroupHTML(g) + "</div>";
+  }
+
+  /* "The course of the river" heading gets its graduation photo inline. */
+  function renderInlineGraduation() {
+    var g = attachedGroups["edu_graduation"];
+    var heading = document.getElementById("education-title");
+    if (!g || !g.images || !g.images.length || !heading) return;
+    var im = g.images[0];
+    var fig = document.createElement("figure");
+    fig.className = "edu-photo";
+    fig.innerHTML =
+      '<img src="' + esc(im.src) + '" alt="' + esc(im.caption || "Graduation") + '" loading="lazy" decoding="async">' +
+      (im.caption ? "<figcaption>" + esc(im.caption) + "</figcaption>" : "");
+    heading.insertAdjacentElement("afterend", fig);
+  }
+
   function loadImages() {
     fetch("images/images.json", { cache: "no-store" })
       .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(function (data) {
         renderHeroImage(data.hero);
         renderGalleries(data);
+        renderInlineGraduation();
       })
       .catch(function (err) {
         console.error("Could not load images/images.json:", err);
@@ -815,7 +901,7 @@
     });
   });
 
-  var compassMap = ["summit", "research", "education", "nutrition", "community"];
+  var compassMap = ["summit", "research", "education", "nutrition", "community", "personal"];
   var compassBtns = document.querySelectorAll(".cp[data-jump]");
   function spy() {
     var cur = "summit", y = window.scrollY + 180;

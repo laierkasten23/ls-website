@@ -9,10 +9,13 @@ Filename: `images/<category>_<subject><N>.<ext>`
 
 - `category` is the FIRST token (letters only, an index like `hobby1_` is OK):
   - `work` → Research range section
-  - `hobby`, `graduation`, `personal` → The summit (about) section
+  - `hobby`, `personal` → the personal gallery at the very end of the page
+    (rendered as ONE flat strip — no per-hobby sub-grouping)
+  - `graduation` → inline photo under the "The course of the river" heading
   - `volunteer` → Community grove section
   - `profile` → hero portrait (any file literally named `profile<N>` becomes
-    the hero; extra profile shots fold into an "On the Road" gallery group)
+    the hero; extra profile shots fold into an "On the Road" gallery group in
+    the personal gallery)
 - `subject` = everything after the first `_`, lowercase, underscores for
   spaces (`milanocortina`, `halfmarathon`). A trailing number groups shots of
   one subject: `work_lab1.JPG` + `work_lab2.JPG` → one "lab" group.
@@ -28,6 +31,22 @@ Known exceptions (in `OVERRIDES` of the generator):
 - `hobby_profile_travel1` → category `profile`, subject `travel`
 - `work_hobby_halfmarathon` → category `work`, subject `halfmarathon`
 
+## Images — attachTo (groups that render inside a panel/inline)
+
+A group can be pinned to a specific anchor instead of a section gallery via
+`attachTo` (in the `ATTACH` map of the generator). Values:
+
+- `work_phuse` → the "In the Lab" group renders inside the "BCI Researcher ·
+  PHuSe Lab" note panel (research).
+- `vol_0` / `vol_1` → the group renders inside the matching volunteer panel
+  (`data-volidx` in the volunteering array).
+- `edu_graduation` → rendered as an inline `<figure class="edu-photo">` right
+  after the "The course of the river" heading (education region).
+- `null` → normal section gallery.
+
+`attachTo` is backward compatible: any group without it renders into its
+section as before. Panel galleries are wrapped in `.panel-gallery`.
+
 ## Images — data file
 
 `images/images.json` is GENERATED (do not hand-maintain):
@@ -35,7 +54,7 @@ Known exceptions (in `OVERRIDES` of the generator):
 ```json
 { "hero": { "file": "profile1.png", "src": "images/web/profile1.jpg", "caption": "" },
   "groups": [ { "id": "work__lab", "category": "work", "section": "research",
-                "title": "In the Lab", "caption": "", "count": 2,
+                "title": "In the Lab", "caption": "", "attachTo": "work_phuse", "count": 2,
                 "images": [ { "file": "work_lab1.JPG", "src": "images/web/work_lab1.jpg", "caption": "" } ] } ] }
 ```
 
@@ -71,6 +90,10 @@ cert) or a flat certs list (simple case):
 - Cert PDF previews are thumbnails in `certificates/thumbs/<basename>.png`,
   regenerated with `./tools/gen-cert-thumbs.sh` (uses macOS `qlmanage`).
   Missing thumb → tile shows a plain "PDF" badge, no breakage.
+- Volunteering entries may carry `adjacentTo` (a shared group key): when two
+  entries share it, opening either one's cert opens BOTH docs in one viewer
+  carousel, adjacent. Example: "Wizz Air Milano Marathon" + "I-HELP" share
+  `"adjacentTo": "milano-marathon-2026"`.
 
 Decisions locked in:
 - AIF sports nutrition = one course, overall cert = the top-level tesserino
@@ -105,3 +128,10 @@ One viewer drives both photo lightboxes and certificate carousels:
   priority (it can sit on top of an open panel).
 - `certificates/thumbs/*` and `images/web/*` are generated assets — safe to
   regenerate; keep originals in place.
+- The hero portrait is a plain rounded rectangle (no circle / dashed frame):
+  `.hero-figure img` uses `border-radius:14px` and the `:before` halo frame
+  was removed. Keep the `.hero-inner{flex:none;width:100%;max-width:1080px}`
+  rule intact — it stops the hero collapsing (it previously shrank to 563px).
+- The personal region (`#personal`) is the LAST region on the page; it has a
+  compass entry ("Personal") and must stay last so the personal gallery closes
+  the page.

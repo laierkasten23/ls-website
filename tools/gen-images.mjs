@@ -36,11 +36,23 @@ const OVERRIDES = {
 
 const SECTION_FOR = {
   work: "research",
-  hobby: "about",
-  personal: "about",
+  hobby: "personal",
+  personal: "personal",
   graduation: "about",
   volunteer: "community",
-  profile: "about"
+  profile: "personal"
+};
+
+/* Groups that attach to a specific anchor instead of a section gallery:
+   work_phuse   -> "BCI Researcher · PHuSe Lab" research note
+   vol_0        -> Olympia volunteer node (index 0 in certificates.json)
+   vol_1        -> Wizz volunteer node (index 1 in certificates.json)
+   edu_graduation -> inline figure after the "The course of the river" heading */
+const ATTACH = {
+  "work__lab": "work_phuse",
+  "volunteer__milanocortina": "vol_0",
+  "volunteer__wizzair": "vol_1",
+  "graduation__graduation": "edu_graduation"
 };
 
 const TITLES = {
@@ -126,6 +138,7 @@ for (const { base, file, src } of files) {
       section: SECTION_FOR[parsed.category] || "about",
       title: humanize(parsed.subject),
       caption: "",
+      attachTo: ATTACH[key] || null,
       images: []
     };
     groups.set(key, g);
@@ -146,9 +159,10 @@ if (extra.length) {
   groups.set("profile__extras", {
     id: "profile__extras",
     category: "profile",
-    section: "about",
+    section: "personal",
     title: humanize(extra[0].subject || "travel"),
     caption: "",
+    attachTo: null,
     images: extra
   });
 }
@@ -159,7 +173,7 @@ const groupList = Array.from(groups.values()).map(function (g) {
 });
 
 /* Sort groups: by section order, then by oldest file name. */
-const SECTION_ORDER = ["about", "research", "community"];
+const SECTION_ORDER = ["about", "research", "community", "personal"];
 groupList.sort(function (a, b) {
   const d = SECTION_ORDER.indexOf(a.section) - SECTION_ORDER.indexOf(b.section);
   return d || a.title.localeCompare(b.title);

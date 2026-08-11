@@ -222,8 +222,7 @@ span.pill.strong{background:var(--forest);color:var(--paper);border-color:var(--
 .hero-inner{flex:none;width:100%;max-width:1080px;margin:0 auto}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:clamp(1.5rem,4vw,4rem);align-items:center}
 .hero-figure{margin:0;text-align:center;position:relative}
-.hero-figure img{position:relative;z-index:1;width:100%;max-width:280px;height:auto;display:block;margin:0 auto;aspect-ratio:4/5;object-fit:cover;border-radius:999px 999px 22px 22px;border:1px solid var(--line-strong);box-shadow:var(--shadow);background:var(--paper-2)}
-.hero-figure:before{content:"";position:absolute;inset:-14px;border:1px dashed var(--sage-line);border-radius:999px 999px 32px 32px;transform:rotate(-1.5deg)}
+.hero-figure img{position:relative;z-index:1;width:100%;max-width:280px;height:auto;display:block;margin:0 auto;aspect-ratio:4/5;object-fit:cover;border-radius:14px;border:1px solid var(--line-strong);box-shadow:var(--shadow);background:var(--paper-2)}
 .hero-figure figcaption{font-size:.82rem;color:var(--ink-faint);font-style:italic;margin-top:.7rem}
 
 /* ---- galleries ---- */
@@ -238,6 +237,14 @@ span.pill.strong{background:var(--forest);color:var(--paper);border-color:var(--
 .g-thumb{flex:0 0 auto;width:158px;height:118px;padding:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:zoom-in;background:var(--paper-2);transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;scroll-snap-align:start}
 .g-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .g-thumb:hover,.g-thumb:focus-visible{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+
+/* ---- attached gallery inside a detail panel ---- */
+.panel-gallery{margin-top:1.6rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+
+/* ---- inline photo under "The course of the river" heading ---- */
+.edu-photo{margin:1.6rem 0 0;max-width:520px}
+.edu-photo img{max-width:100%;width:100%;border-radius:14px;border:1px solid var(--line-strong);box-shadow:var(--shadow);display:block;object-fit:cover}
+.edu-photo figcaption{font-size:.82rem;color:var(--ink-faint);font-style:italic;margin-top:.5rem}
 
 /* ---- course / module / cert tiles (inside the detail panel) ---- */
 .overall-cert{margin-top:.5rem;border:1px solid var(--line);border-radius:16px;padding:1rem;background:white}
@@ -288,7 +295,6 @@ span.pill.strong{background:var(--forest);color:var(--paper);border-color:var(--
   .hero-grid{grid-template-columns:1fr;gap:1.6rem}
   .hero-figure{order:-1}
   .hero-figure img{max-width:210px}
-  .hero-figure:before{inset:-10px}
   .region-hero{align-items:flex-start;padding-top:6.5rem}
 }
 @media (max-width:760px){

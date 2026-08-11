@@ -69,7 +69,8 @@ it will render as a plain chip.
 ### Region names / navigation labels
 
 The compass buttons in the masthead (`index.html`) and the `compassMap` array in
-`script.js` must stay in sync if you rename a region.
+`script.js` must stay in sync if you rename a region. The final region is the
+personal gallery (`#personal`) — it must remain the last region on the page.
 
 ---
 
@@ -122,6 +123,11 @@ Same pattern in the `"volunteering"` array — fields are `role`, `detail`,
 `location`, `period`, plus optional `doc` / `docLabel`. A doc opens in the
 shared media viewer with a "View … →" link as well.
 
+Two entries can share an `adjacentTo` key (e.g. `"adjacentTo":
+"milano-marathon-2026"`): opening either one's certificate then opens BOTH
+docs in one viewer carousel, side by side. (Used for the Wizz Air Marathon +
+I-HELP certificates.)
+
 ---
 
 ## Adding photos (image gallery)
@@ -131,9 +137,10 @@ naming convention in `LESSONS.md`. The short version:
 
 1. Drop the file into `images/` named `category_subjectN.ext`
    (e.g. `work_lab3.JPG`, `volunteer_milanocortina5.JPG`).
-   Categories: `work` → Research, `hobby` / `personal` / `graduation` →
-   The summit, `volunteer` → Community. Files named `profile*` become the
-   hero portrait.
+   Categories: `work` → Research, `hobby` / `personal` → the personal gallery
+   at the end of the page, `volunteer` → Community, `graduation` → an inline
+   photo under the "The course of the river" heading. Files named `profile*`
+   become the hero portrait.
 2. Regenerate the data and previews:
    ```sh
    node tools/gen-images.mjs
@@ -145,9 +152,14 @@ naming convention in `LESSONS.md`. The short version:
    ```
 4. Push. The photo lands in the right section/group automatically.
 
-The gallery renders as compact per-subject strips; tapping any shot opens the
-shared media viewer (arrows, keyboard `←`/`→`, `Esc` to close, touch swipe,
-click to zoom photos).
+Some groups are pinned to a panel instead of a section gallery via `attachTo`
+in the generator (`ATTACH` map): the "In the Lab" group shows inside the PHuSe
+Lab note, and the Milano Cortina / Wizz Air groups show inside their volunteer
+panels. See `LESSONS.md` → "Images — attachTo" for the full list.
+
+The gallery renders as compact strips (personal photos are one flat strip);
+tapping any shot opens the shared media viewer (arrows, keyboard `←`/`→`,
+`Esc` to close, touch swipe, click to zoom photos).
 
 ---
 

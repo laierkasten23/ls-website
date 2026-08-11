@@ -105,7 +105,8 @@
       "location": "Milan, Italy",
       "period": "Apr 2026",
       "doc": "volunteering/wizzair-milano-marathon.png",
-      "docLabel": "Volunteer certificate"
+      "docLabel": "Volunteer certificate",
+      "adjacentTo": "milano-marathon-2026"
     },
     {
       "role": "I-HELP for Milano Marathon 2026",
@@ -113,7 +114,8 @@
       "location": "Milan, Italy",
       "period": "Apr 2026",
       "doc": "volunteering/ihelp-staff-milano-marathon.pdf",
-      "docLabel": "Course certificate"
+      "docLabel": "Course certificate",
+      "adjacentTo": "milano-marathon-2026"
     },
     {
       "role": "Study Commission \u00b7 Cognitive Science",
