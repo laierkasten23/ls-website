@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232d463b'/%3E%3Cpath d='M16 7c2.4 3.3 5.2 5.3 4.2 8.6-.9 2.9-3.6 3.6-4.2 6.4' fill='none' stroke='%23f4efe3' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M16 7c-2.4 3.3-5.2 5.3-4.2 8.6.9 2.9 3.6 3.6 4.2 6.4' fill='none' stroke='%23f4efe3' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -45,17 +46,24 @@
   <section class="region region-hero" id="summit" aria-labelledby="summit-title">
     <div class="terrain" data-seed="12001" aria-hidden="true"></div>
     <div class="hero-inner">
-      <p class="eyebrow">B.Sc. Cognitive Science · M.Sc. Scientific Computing</p>
-      <h1 id="summit-title" class="hero-title">
-        <span class="hero-line">Lia Schmid</span>
-        <span class="hero-sub">brain–computer interfaces <em>&</em> sports nutrition</span>
-      </h1>
-      <p class="hero-lede">I build bridges between living minds, machines and the body — decoding brain signals in the lab and designing nutrition for people who move.</p>
-      <div class="hero-actions">
-        <button class="cta" data-descend="research">Descend into the terrain <span aria-hidden="true">↓</span></button>
-        <a class="cta cta-quiet" href="#about">Meet the field notes</a>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">B.Sc. Cognitive Science · M.Sc. Scientific Computing</p>
+          <h1 id="summit-title" class="hero-title">
+            <span class="hero-line">Lia Schmid</span>
+            <span class="hero-sub">brain–computer interfaces <em>&</em> sports nutrition</span>
+          </h1>
+          <p class="hero-lede">I build bridges between living minds, machines and the body — decoding brain signals in the lab and designing nutrition for people who move.</p>
+          <div class="hero-actions">
+            <button class="cta" data-descend="research">Descend into the terrain <span aria-hidden="true">↓</span></button>
+            <a class="cta cta-quiet" href="#about">Meet the field notes</a>
+          </div>
+          <p class="hero-hint">This terrain has camps to visit. Everything is clickable — hover, tap, or explore with the keyboard.</p>
+        </div>
+        <figure class="hero-figure" id="heroFigure">
+          <!-- portrait injected from images/images.json -->
+        </figure>
       </div>
-      <p class="hero-hint">This terrain has camps to visit. Everything is clickable — hover, tap, or explore with the keyboard.</p>
     </div>
     <div class="scrolldot" aria-hidden="true"><span></span></div>
   </section>
@@ -90,6 +98,7 @@
         <span class="node-tag">a small confession</span>
       </button>
     </div>
+    <div class="gallery" id="galleryAbout" data-section="about"></div>
   </section>
 
   <!-- ===================== RESEARCH ===================== -->
@@ -132,6 +141,7 @@
         <span class="node-tag">5 records</span>
       </button>
     </div>
+    <div class="gallery" id="galleryResearch" data-section="research"></div>
   </section>
 
   <!-- ===================== EDUCATION ===================== -->
@@ -193,6 +203,7 @@
       <!-- volunteering rendered from certificates.json -->
       <noscript>Please enable JavaScript to view volunteering.</noscript>
     </div>
+    <div class="gallery" id="galleryCommunity" data-section="community"></div>
   </section>
 
 </main>
@@ -211,6 +222,20 @@
 </div>
 
 <div class="toast" id="toast" hidden role="status"></div>
+
+<!-- ===================== MEDIA VIEWER (photos + certs) ===================== -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Media viewer" hidden>
+  <button class="viewer-close" id="viewerClose" aria-label="Close">×</button>
+  <button class="viewer-nav viewer-prev" id="viewerPrev" aria-label="Previous" hidden>‹</button>
+  <button class="viewer-nav viewer-next" id="viewerNext" aria-label="Next" hidden>›</button>
+  <div class="viewer-stage" id="viewerStage" tabindex="0"></div>
+  <button class="viewer-zoom" id="viewerZoom" aria-label="Toggle zoom" hidden>＋</button>
+  <a class="viewer-open" id="viewerOpen" target="_blank" rel="noopener" hidden>Open original ↗</a>
+  <div class="viewer-meta" id="viewerMeta" hidden>
+    <p class="viewer-title" id="viewerTitle"></p>
+    <p class="viewer-counter" id="viewerCounter"></p>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>

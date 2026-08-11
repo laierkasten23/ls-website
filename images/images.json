@@ -1,0 +1,206 @@
+{
+  "hero": {
+    "file": "profile1.png",
+    "src": "images/web/profile1.jpg",
+    "subject": "profile",
+    "caption": ""
+  },
+  "groups": [
+    {
+      "id": "hobby__camp",
+      "category": "hobby",
+      "section": "about",
+      "title": "Camping",
+      "caption": "",
+      "images": [
+        {
+          "file": "hobby2_camp.JPG",
+          "src": "images/web/hobby2_camp.jpg",
+          "caption": ""
+        },
+        {
+          "file": "hobby4_camp.gif",
+          "src": "images/hobby4_camp.gif",
+          "caption": ""
+        }
+      ],
+      "count": 2
+    },
+    {
+      "id": "hobby__climb",
+      "category": "hobby",
+      "section": "about",
+      "title": "Climbing",
+      "caption": "",
+      "images": [
+        {
+          "file": "hobby1_climb.JPG",
+          "src": "images/web/hobby1_climb.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "graduation__graduation",
+      "category": "graduation",
+      "section": "about",
+      "title": "Graduation",
+      "caption": "",
+      "images": [
+        {
+          "file": "web/graduation1.jpg",
+          "src": "images/web/graduation1.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "hobby__hike",
+      "category": "hobby",
+      "section": "about",
+      "title": "Hiking",
+      "caption": "",
+      "images": [
+        {
+          "file": "hobby6_hike1.JPG",
+          "src": "images/web/hobby6_hike1.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "profile__extras",
+      "category": "profile",
+      "section": "about",
+      "title": "On the Road",
+      "caption": "",
+      "images": [
+        {
+          "file": "hobby_profile_travel1.JPG",
+          "src": "images/web/hobby_profile_travel1.jpg",
+          "subject": "travel",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "hobby__f1",
+      "category": "hobby",
+      "section": "about",
+      "title": "Pit Lane",
+      "caption": "",
+      "images": [
+        {
+          "file": "hobby3_f1.JPG",
+          "src": "images/web/hobby3_f1.jpg",
+          "caption": ""
+        },
+        {
+          "file": "hobby5_f1.gif",
+          "src": "images/hobby5_f1.gif",
+          "caption": ""
+        }
+      ],
+      "count": 2
+    },
+    {
+      "id": "work__eeg",
+      "category": "work",
+      "section": "research",
+      "title": "EEG Sessions",
+      "caption": "",
+      "images": [
+        {
+          "file": "work_eeg1.JPG",
+          "src": "images/web/work_eeg1.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "work__halfmarathon",
+      "category": "work",
+      "section": "research",
+      "title": "Half Marathon",
+      "caption": "",
+      "images": [
+        {
+          "file": "work_hobby_halfmarathon.JPG",
+          "src": "images/web/work_hobby_halfmarathon.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "work__lab",
+      "category": "work",
+      "section": "research",
+      "title": "In the Lab",
+      "caption": "",
+      "images": [
+        {
+          "file": "work_lab1.JPG",
+          "src": "images/web/work_lab1.jpg",
+          "caption": ""
+        },
+        {
+          "file": "work_lab2.JPG",
+          "src": "images/web/work_lab2.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 2
+    },
+    {
+      "id": "volunteer__milanocortina",
+      "category": "volunteer",
+      "section": "community",
+      "title": "Milano Cortina 2026",
+      "caption": "",
+      "images": [
+        {
+          "file": "volunteer_milanocortina1.JPG",
+          "src": "images/web/volunteer_milanocortina1.jpg",
+          "caption": ""
+        },
+        {
+          "file": "volunteer_milanocortina2.JPG",
+          "src": "images/web/volunteer_milanocortina2.jpg",
+          "caption": ""
+        },
+        {
+          "file": "volunteer_milanocortina3.JPG",
+          "src": "images/web/volunteer_milanocortina3.jpg",
+          "caption": ""
+        },
+        {
+          "file": "volunteer_milanocortina4.JPG",
+          "src": "images/web/volunteer_milanocortina4.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 4
+    },
+    {
+      "id": "volunteer__wizzair",
+      "category": "volunteer",
+      "section": "community",
+      "title": "Wizz Air Milano Marathon",
+      "caption": "",
+      "images": [
+        {
+          "file": "volunteer_wizzair.JPG",
+          "src": "images/web/volunteer_wizzair.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    }
+  ]
+}

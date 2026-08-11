@@ -8,8 +8,12 @@ note. Plain HTML/CSS/JS, no frameworks, no build step.
 - `style.css` — design system (nature palette, responsive, accessible)
 - `script.js` — terrain generation, content data, interactions
 - `certificates.json` — credentials & volunteering data (edit here)
-- `certificates/` — credential documents (PDFs)
+- `images/images.json` — photo data (regenerate with the tool below)
+- `certificates/` — credential documents (PDFs) + `thumbs/` (rendered previews)
+- `images/` — photos (originals kept), `images/web/` (downscaled copies)
 - `volunteering/` — volunteer certificates (PDF/PNG)
+- `tools/gen-images.mjs` — regenerates `images/images.json` from `images/`
+- `tools/gen-cert-thumbs.sh` — regenerates certificate PDF thumbnails
 
 ---
 
@@ -72,47 +76,88 @@ The compass buttons in the masthead (`index.html`) and the `compassMap` array in
 ## Adding / updating a certificate
 
 Everything renders from `certificates.json` — you never touch layout code.
+Credentials are grouped as **courses**; a course either has a flat list of
+`certs[]` (simple case) or an `overall` certificate plus `modules[]`, where
+each module has its own `certs[]`.
 
-### Add a new certificate
+```json
+{
+  "id": "my-course",
+  "title": "Course title",
+  "sub": "One-line subtitle shown under the landmark",
+  "issuer": "Issuing body (optional)",
+  "overall": {
+    "title": "Course certificate",
+    "qualification": "Instructor · Nutrition",
+    "issuer": "…", "date": "2026-08-11", "credentialId": "…",
+    "doc": "certificates/my-file.pdf", "category": "…", "note": "…"
+  },
+  "modules": [
+    {
+      "id": "m1", "title": "Module 1",
+      "certs": [ { "title": "AIF Diploma", "doc": "docs/nutrition/…/file.pdf", "note": "…" } ]
+    }
+  ]
+}
+```
 
-1. Drop the PDF into `certificates/` (keep names simple, no spaces).
-2. Add an entry to the `"nutrition"` array:
-   ```json
-   {
-     "title": "Title of the credential",
-     "qualification": "Assistant Trainer · Nutrition",
-     "issuer": "Accademia Italiana Fitness (AIF)",
-     "date": "2026-08-11",
-     "credentialId": "AIF n. 202279552",
-     "doc": "certificates/my-file.pdf",
-     "category": "Sports Nutrition",
-     "note": "One-line description shown in the detail note."
-   }
-   ```
+Required per cert: `title`, `doc`. Everything else is optional. A course with
+**no modules** just uses `certs[]` directly (the ESWA Fitness Teacher is an
+example). After adding/removing any `doc`, regenerate the PDF previews:
 
-   Required: `title`, `date`, `doc`. The rest are optional.
-3. Push. The new certificate appears as a landmark in the **Nutrition fields**
-   region automatically.
+```sh
+./tools/gen-cert-thumbs.sh
+```
 
-### Update / remove
+### Add a new certificate to a module
 
-Edit the entry in `certificates.json` (dates, issuers, links) or delete the
-whole entry. Remove the now-unused PDF from `certificates/` if you like.
+1. Drop the PDF in `certificates/` (or `docs/…`, keep names simple, no spaces).
+2. Add an entry to the module's `certs[]` array.
+3. Re-run `./tools/gen-cert-thumbs.sh` so the carousel tile gets a preview.
+4. Push. The module row, carousel and preview all pick it up.
 
 ### Volunteering
 
 Same pattern in the `"volunteering"` array — fields are `role`, `detail`,
-`location`, `period`, plus optional `doc` / `docLabel`.
+`location`, `period`, plus optional `doc` / `docLabel`. A doc opens in the
+shared media viewer with a "View … →" link as well.
+
+---
+
+## Adding photos (image gallery)
+
+Photos render from `images/images.json`, which is **generated** — see the
+naming convention in `LESSONS.md`. The short version:
+
+1. Drop the file into `images/` named `category_subjectN.ext`
+   (e.g. `work_lab3.JPG`, `volunteer_milanocortina5.JPG`).
+   Categories: `work` → Research, `hobby` / `personal` / `graduation` →
+   The summit, `volunteer` → Community. Files named `profile*` become the
+   hero portrait.
+2. Regenerate the data and previews:
+   ```sh
+   node tools/gen-images.mjs
+   ```
+3. If it's a new large photo, also drop a downscaled copy in `images/web/`
+   (the generator prefers it when present):
+   ```sh
+   sips -s format jpeg -Z 1600 -s formatOptions 82 images/my_photo.JPG --out images/web/my_photo.jpg
+   ```
+4. Push. The photo lands in the right section/group automatically.
+
+The gallery renders as compact per-subject strips; tapping any shot opens the
+shared media viewer (arrows, keyboard `←`/`→`, `Esc` to close, touch swipe,
+click to zoom photos).
 
 ---
 
 ## Notes
 
 - The topographic terrain is generated procedurally in `script.js` — no image
-  assets needed. If you ever drop images into `images/`, they are not used yet.
+  assets needed for the backdrop itself.
 - The only external dependency is the Google Fonts stylesheet (Fraunces + Inter)
   in `index.html`.
 - The **"Pit-lane note"** landmark in the summit section is a deliberate,
   small motorsport easter egg — keep it understated to preserve the tone.
-- Re-run `git status` before pushing to avoid accidentally committing PDFs you
-  didn't intend to publish.
+- Re-run `git status` before pushing to avoid accidentally committing PDFs or
+  original photos you didn't intend to publish.

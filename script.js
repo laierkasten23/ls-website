@@ -369,8 +369,8 @@
     document.querySelectorAll("[data-open]").forEach(function (el) {
       if (discovered[el.getAttribute("data-open")]) el.classList.add("is-done");
     });
-    document.querySelectorAll(".cert-node").forEach(function (el) {
-      if (discovered[el.getAttribute("data-key")]) el.classList.add("is-done");
+    document.querySelectorAll(".course-node").forEach(function (el) {
+      if (discovered["course_" + el.getAttribute("data-cid")]) el.classList.add("is-done");
     });
     var vols = document.querySelectorAll(".vol-node");
     vols.forEach(function (el, i) {
@@ -381,11 +381,22 @@
   /* ---------------------------------------------------------------- */
   /*  Open / close panel                                               */
   /* ---------------------------------------------------------------- */
+  /* ---- scroll lock (shared by panel + viewer) ---- */
+  var scrollLock = 0;
+  function lockScroll() {
+    scrollLock++;
+    document.body.style.overflow = "hidden";
+  }
+  function unlockScroll() {
+    scrollLock = Math.max(0, scrollLock - 1);
+    if (!scrollLock) document.body.style.overflow = "";
+  }
+
   function openPanel(html, focusEl) {
     panelBody.innerHTML = html;
     panelBackdrop.hidden = false;
     panelBackdrop.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+    lockScroll();
     lastFocused = focusEl || document.activeElement;
     setTimeout(function () {
       var closeBtn = panelClose;
@@ -396,7 +407,7 @@
   function closePanel(focusBack) {
     panelBackdrop.hidden = true;
     panelBackdrop.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
+    unlockScroll();
     try { panelBody.innerHTML = ""; } catch (e) {}
     if (focusBack && lastFocused && lastFocused.focus) { lastFocused.focus(); lastFocused.classList.add("is-new"); }
   }
@@ -414,23 +425,136 @@
     if (e.target === panelBackdrop) closePanel(true);
   });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && !panelBackdrop.hidden) closePanel(true);
+    if (e.key === "Escape") {
+      if (!viewerEl.hidden) { closeViewer(true); return; }
+      if (!panelBackdrop.hidden) { closePanel(true); return; }
+    }
+    if (!viewerEl.hidden && viewer.items.length > 1) {
+      if (e.key === "ArrowLeft") { viewerGoto(viewer.index - 1); e.preventDefault(); }
+      else if (e.key === "ArrowRight") { viewerGoto(viewer.index + 1); e.preventDefault(); }
+    }
   });
+
+  /* ---------------------------------------------------------------- */
+  /*  Shared media viewer — photo lightbox + certificate carousel      */
+  /* ---------------------------------------------------------------- */
+  var viewerEl = document.getElementById("viewer");
+  var viewerStage = document.getElementById("viewerStage");
+  var viewerClose = document.getElementById("viewerClose");
+  var viewerPrev = document.getElementById("viewerPrev");
+  var viewerNext = document.getElementById("viewerNext");
+  var viewerZoom = document.getElementById("viewerZoom");
+  var viewerOpen = document.getElementById("viewerOpen");
+  var viewerTitle = document.getElementById("viewerTitle");
+  var viewerCounter = document.getElementById("viewerCounter");
+  var viewerMeta = document.getElementById("viewerMeta");
+
+  var viewer = { items: [], index: 0, open: false, zoom: false, focusEl: null };
+
+  function kindOf(src) { return /\.pdf($|\?)/i.test(src) ? "pdf" : "img"; }
+  function thumbFor(doc) {
+    var base = String(doc).split("/").pop().replace(/\.pdf$/i, "");
+    return "certificates/thumbs/" + encodeURIComponent(base) + ".png";
+  }
+  function docThumb(doc) { return kindOf(doc) === "pdf" ? thumbFor(doc) : doc; }
+  function certItem(ct) {
+    return { src: ct.doc, title: ct.title || "Certificate", caption: ct.note || "", kind: "pdf" };
+  }
+
+  function viewerRender() {
+    var item = viewer.items[viewer.index];
+    if (!item) return;
+    viewer.zoom = false;
+    viewerStage.classList.remove("zoomed");
+    viewerZoom.textContent = "＋";
+    if (item.kind === "pdf") {
+      viewerStage.innerHTML = '<iframe src="' + esc(item.src) + '" title="' + esc(item.title) + '" loading="lazy"></iframe>';
+      viewerZoom.hidden = true;
+      viewerOpen.hidden = false;
+      viewerOpen.href = item.src;
+    } else {
+      viewerStage.innerHTML = '<img src="' + esc(item.src) + '" alt="' + esc(item.caption || item.title) + '" draggable="false">';
+      viewerZoom.hidden = false;
+      viewerOpen.hidden = true;
+    }
+    viewerTitle.textContent = item.title;
+    if (item.caption) viewerTitle.textContent += " — " + item.caption;
+    viewerMeta.hidden = false;
+    if (viewer.items.length > 1) {
+      viewerCounter.textContent = (viewer.index + 1) + " / " + viewer.items.length;
+      viewerPrev.hidden = false;
+      viewerNext.hidden = false;
+      viewerPrev.disabled = viewer.index === 0;
+      viewerNext.disabled = viewer.index === viewer.items.length - 1;
+    } else {
+      viewerCounter.textContent = "";
+      viewerPrev.hidden = true;
+      viewerNext.hidden = true;
+    }
+  }
+
+  function viewerGoto(i) {
+    if (!viewer.items.length) return;
+    var n = viewer.items.length;
+    viewer.index = ((i % n) + n) % n;
+    viewerRender();
+    viewerStage.focus({ preventScroll: true });
+  }
+
+  function openViewer(items, index, focusEl) {
+    if (!items || !items.length) return;
+    viewer.items = items;
+    viewer.index = Math.max(0, Math.min(index || 0, items.length - 1));
+    viewer.focusEl = focusEl || document.activeElement;
+    viewer.open = true;
+    viewerEl.hidden = false;
+    viewerEl.setAttribute("aria-hidden", "false");
+    lockScroll();
+    viewerRender();
+    setTimeout(function () { viewerClose.focus(); }, 30);
+  }
+  function closeViewer(focusBack) {
+    if (!viewer.open) return;
+    viewer.open = false;
+    viewerEl.hidden = true;
+    viewerEl.setAttribute("aria-hidden", "true");
+    viewerStage.innerHTML = "";
+    viewerStage.classList.remove("zoomed");
+    unlockScroll();
+    if (focusBack && viewer.focusEl && viewer.focusEl.focus) {
+      viewer.focusEl.focus();
+      viewer.focusEl.classList.add("is-new");
+    }
+  }
+
+  viewerClose.addEventListener("click", function () { closeViewer(true); });
+  viewerPrev.addEventListener("click", function () { viewerGoto(viewer.index - 1); });
+  viewerNext.addEventListener("click", function () { viewerGoto(viewer.index + 1); });
+  viewerZoom.addEventListener("click", function () { toggleZoom(); });
+  viewerEl.addEventListener("click", function (e) {
+    if (e.target === viewerEl) closeViewer(true);
+  });
+  viewerStage.addEventListener("click", function (e) {
+    if (e.target && e.target.tagName === "IMG") toggleZoom();
+  });
+  function toggleZoom() {
+    if (viewer.items[viewer.index] && viewer.items[viewer.index].kind === "pdf") return;
+    viewer.zoom = !viewer.zoom;
+    viewerStage.classList.toggle("zoomed", viewer.zoom);
+    viewerZoom.textContent = viewer.zoom ? "−" : "＋";
+  }
+  var touchX = null;
+  viewerStage.addEventListener("touchstart", function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  viewerStage.addEventListener("touchend", function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(dx) > 40 && viewer.items.length > 1) viewerGoto(viewer.index + (dx < 0 ? 1 : -1));
+  }, { passive: true });
 
   /* ---------------------------------------------------------------- */
   /*  Certificates + volunteering (rendered from certificates.json)    */
   /* ---------------------------------------------------------------- */
-  function certNode(c) {
-    return '<button class="node cert-node" data-key="cert_' + esc(c.title) + '" ' +
-      'data-title="' + esc(c.title) + '" data-qual="' + esc(c.qualification || "") + '" ' +
-      'data-issuer="' + esc(c.issuer || "") + '" data-date="' + esc(c.date || "") + '" ' +
-      'data-id="' + esc(c.credentialId || "") + '" data-doc="' + esc(c.doc || "") + '" ' +
-      'data-cat="' + esc(c.category || "") + '" data-note="' + esc(c.note || "") + '">' +
-      '<span class="node-dot" aria-hidden="true"></span>' +
-      '<span class="node-title">' + esc(c.title) + "</span>" +
-      '<span class="node-tag">' + esc(c.qualification || c.date || "") + "</span></button>";
-  }
-
   function fmtDate(d) {
     if (!d) return "";
     var p = String(d).split("-");
@@ -439,19 +563,83 @@
     return months[parseInt(p[1], 10) - 1] + " " + parseInt(p[2], 10) + ", " + p[0];
   }
 
-  function openCert(el) {
+  function countCerts(c) {
+    var n = 0;
+    if (c.overall) n++;
+    if (c.modules) c.modules.forEach(function (m) { n += m.certs ? m.certs.length : 0; });
+    if (c.certs) n += c.certs.length;
+    return n;
+  }
+
+  function courseNode(c) {
+    return '<button class="node course-node" data-key="course_' + esc(c.id) + '" data-cid="' + esc(c.id) + '">' +
+      '<span class="node-dot" aria-hidden="true"></span>' +
+      '<span class="node-title">' + esc(c.title) + "</span>" +
+      '<span class="node-tag">' + esc(c.sub || "") + "</span></button>";
+  }
+
+  function certTileHTML(ct, listName, cid, i) {
+    return '<button class="cert-tile" data-cert="1" data-list="' + esc(listName) + '" data-cid="' + esc(cid) + '" data-idx="' + i + '">' +
+      '<span class="cert-thumb"><img src="' + esc(docThumb(ct.doc)) + '" alt="" loading="lazy" onerror="this.closest(\'.cert-thumb\').classList.add(\'no-thumb\')"></span>' +
+      '<span class="cert-tile-title">' + esc(ct.title || "Certificate") + "</span></button>";
+  }
+
+  function openCoursePanel(c, el) {
     var html =
-      '<p class="panel-kicker">Credential · ' + esc(el.getAttribute("data-cat")) + "</p>" +
-      "<h3>" + esc(el.getAttribute("data-title")) + "</h3>" +
-      (el.getAttribute("data-qual") ? '<p class="panel-sub">' + esc(el.getAttribute("data-qual")) + "</p>" : "") +
-      H.meta([
-        H.pill(esc(fmtDate(el.getAttribute("data-date"))), true),
-        H.pill(esc(el.getAttribute("data-issuer"))),
-        el.getAttribute("data-id") ? H.pill(esc(el.getAttribute("data-id"))) : ""
-      ]) +
-      (el.getAttribute("data-note") ? "<p>" + esc(el.getAttribute("data-note")) + "</p>" : "") +
-      (el.getAttribute("data-doc") ? '<a class="cert-link" href="' + esc(el.getAttribute("data-doc")) + '" target="_blank" rel="noopener">View credential document →</a>' : "");
+      '<p class="panel-kicker">Credential · course</p>' +
+      "<h3>" + esc(c.title) + "</h3>" +
+      (c.sub ? '<p class="panel-sub">' + esc(c.sub) + "</p>" : "") +
+      H.meta([c.issuer ? H.pill(esc(c.issuer)) : "", H.pill(String(countCerts(c)) + " documents", true)]);
+
+    if (c.overall) {
+      var o = c.overall;
+      html += '<div class="overall-cert">' +
+        '<p class="overall-kicker">Course certificate</p>' +
+        H.meta([
+          o.qualification ? H.pill(esc(o.qualification)) : "",
+          o.date ? H.pill(esc(fmtDate(o.date)), true) : "",
+          o.credentialId ? H.pill(esc(o.credentialId)) : ""
+        ]) +
+        certTileHTML(o, "overall", c.id, 0) +
+        "</div>";
+    }
+
+    if (c.modules && c.modules.length) {
+      html += '<div class="module-list"><p class="module-kicker">Modules</p>' +
+        c.modules.map(function (m, mi) {
+          return '<button class="module-row" data-module="' + esc(c.id) + '" data-idx="' + mi + '">' +
+            '<span class="module-name">' + esc(m.title) + "</span>" +
+            '<span class="module-count">' + (m.certs ? m.certs.length : 0) + " doc" + ((m.certs && m.certs.length === 1) ? "" : "s") + "</span>" +
+            "</button>";
+        }).join("") +
+        "</div>";
+    }
+
+    if (c.certs && c.certs.length) {
+      html += '<div class="module-list"><p class="module-kicker">Documents</p>' +
+        '<div class="cert-grid">' +
+        c.certs.map(function (ct, i) { return certTileHTML(ct, "certs", c.id, i); }).join("") +
+        "</div></div>";
+    }
+
     openPanel(html, el);
+
+    panelBody.querySelectorAll("[data-cert]").forEach(function (tile) {
+      tile.addEventListener("click", function () {
+        var list = tile.getAttribute("data-list") === "overall" ? [c.overall] : (c.certs || []);
+        var i = parseInt(tile.getAttribute("data-idx"), 10);
+        openViewer(list.map(certItem), i, tile);
+      });
+    });
+    panelBody.querySelectorAll("[data-module]").forEach(function (row) {
+      row.addEventListener("click", function () {
+        var mi = parseInt(row.getAttribute("data-idx"), 10);
+        var m = c.modules[mi];
+        markDiscovered("module_" + c.id + "_" + m.id);
+        row.classList.add("is-done");
+        openViewer((m.certs || []).map(certItem), 0, row);
+      });
+    });
   }
 
   function volNode(v, i) {
@@ -470,8 +658,17 @@
         "<h3>" + esc(v.role) + "</h3>" +
         (v.detail ? '<p class="panel-sub">' + esc(v.detail) + "</p>" : "") +
         H.meta([H.pill(esc(v.period), true), v.location ? H.pill(esc(v.location)) : ""]) +
+        (v.doc ? '<div class="vol-preview">' +
+          '<button class="cert-tile" data-volpreview="1">' +
+          '<span class="cert-thumb"><img src="' + esc(docThumb(v.doc)) + '" alt="" loading="lazy" onerror="this.closest(\'.cert-thumb\').classList.add(\'no-thumb\')"></span>' +
+          '<span class="cert-tile-title">' + esc(v.docLabel || "Certificate") + "</span>" +
+          "</button></div>" : "") +
         (v.doc ? '<div class="panel-actions"><a class="cta cta-quiet" href="' + esc(v.doc) + '" target="_blank" rel="noopener">View ' + esc(v.docLabel || "certificate") + " →</a></div>" : "");
       openPanel(html, el);
+      var pv = panelBody.querySelector("[data-volpreview]");
+      if (pv) pv.addEventListener("click", function () {
+        openViewer([{ src: v.doc, title: v.docLabel || "Certificate", caption: v.role, kind: kindOf(v.doc) }], 0, pv);
+      });
     }
   }
 
@@ -480,18 +677,21 @@
       .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(function (data) {
         window.__vols = data.volunteering || [];
-        var certs = data.nutrition || [];
+        window.__courses = data.courses || [];
         var box = document.getElementById("nutritionNodes");
         if (box) {
-          if (!certs.length) {
+          if (!window.__courses.length) {
             box.innerHTML = '<p class="cert-note">No credentials listed.</p>';
           } else {
-            box.innerHTML = certs.map(certNode).join("");
-            box.querySelectorAll(".cert-node").forEach(function (el) {
+            box.innerHTML = window.__courses.map(courseNode).join("");
+            box.querySelectorAll(".course-node").forEach(function (el) {
               el.addEventListener("click", function () {
-                var key = el.getAttribute("data-key");
-                markDiscovered(key); el.classList.add("is-done");
-                openCert(el);
+                var cid = el.getAttribute("data-cid");
+                var course = (window.__courses || []).filter(function (c) { return c.id === cid; })[0];
+                if (!course) return;
+                markDiscovered("course_" + cid);
+                el.classList.add("is-done");
+                openCoursePanel(course, el);
               });
             });
           }
@@ -516,11 +716,86 @@
   }
 
   /* ---------------------------------------------------------------- */
+  /*  Image galleries (rendered from images/images.json)               */
+  /* ---------------------------------------------------------------- */
+  var imageGroups = {};
+
+  function renderHeroImage(hero) {
+    var fig = document.getElementById("heroFigure");
+    if (!fig || !hero || !hero.src) return;
+    fig.innerHTML =
+      '<img src="' + esc(hero.src) + '" alt="' + esc(hero.caption || "Portrait of Lia Schmid") + '" fetchpriority="high">' +
+      "<figcaption>" + esc(hero.caption || "Lia Schmid") + "</figcaption>";
+  }
+
+  function galleryGroupHTML(g) {
+    var title = esc(g.title);
+    var n = g.images.length;
+    var thumbs = g.images.map(function (im, i) {
+      var alt = im.caption || g.title + " — " + (i + 1);
+      return '<button class="g-thumb" data-gallery="' + esc(g.id) + '" data-idx="' + i + '" aria-label="' + esc(alt) + '">' +
+        '<img src="' + esc(im.src) + '" alt="' + esc(alt) + '" loading="lazy" decoding="async"></button>';
+    }).join("");
+    var caption = g.caption ? '<p class="gg-caption">' + esc(g.caption) + "</p>" : "";
+    return '<section class="gallery-group" aria-label="' + title + '">' +
+      '<div class="gg-head"><h3 class="gg-title">' + title + ' <span class="gg-count">' + n + " " + (n === 1 ? "photo" : "photos") + "</span></h3>" + caption + "</div>" +
+      '<div class="gg-strip">' + thumbs + "</div></section>";
+  }
+
+  function renderGalleries(data) {
+    var boxes = {
+      about: document.getElementById("galleryAbout"),
+      research: document.getElementById("galleryResearch"),
+      community: document.getElementById("galleryCommunity")
+    };
+    var groups = (data.groups || []).filter(function (g) { return g.images && g.images.length; });
+    groups.forEach(function (g) {
+      var box = boxes[g.section];
+      if (!box) return;
+      imageGroups[g.id] = g;
+      box.classList.add("has-groups");
+      box.innerHTML += galleryGroupHTML(g);
+    });
+    Object.keys(boxes).forEach(function (key) {
+      var box = boxes[key];
+      if (!box || !box.classList.contains("has-groups")) return;
+      var label = document.createElement("p");
+      label.className = "gallery-label";
+      label.textContent = "Field photos — tap a shot to open it";
+      box.insertBefore(label, box.firstChild);
+    });
+  }
+
+  function loadImages() {
+    fetch("images/images.json", { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (data) {
+        renderHeroImage(data.hero);
+        renderGalleries(data);
+      })
+      .catch(function (err) {
+        console.error("Could not load images/images.json:", err);
+      });
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-gallery]");
+    if (!btn) return;
+    var g = imageGroups[btn.getAttribute("data-gallery")];
+    if (!g) return;
+    var idx = parseInt(btn.getAttribute("data-idx"), 10);
+    var items = g.images.map(function (im) {
+      return { src: im.src, title: g.title, caption: im.caption, kind: kindOf(im.src) };
+    });
+    openViewer(items, idx, btn);
+  });
+
+  /* ---------------------------------------------------------------- */
   /*  Compass + counter totals                                         */
   /* ---------------------------------------------------------------- */
   function updateTotals() {
     var total = document.querySelectorAll("[data-open]").length +
-      document.querySelectorAll(".cert-node").length +
+      document.querySelectorAll(".course-node").length +
       document.querySelectorAll(".vol-node").length;
     if (foundTotal) foundTotal.textContent = total;
     updateCounter();
@@ -593,4 +868,5 @@
 
   applyVisited();
   loadJson();
+  loadImages();
 })();
