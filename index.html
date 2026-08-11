@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia Schmid — Exploring a working brain</title>
+<meta name="description" content="Lia Schmid — brain-computer interface researcher and certified sports nutritionist. An explorable personal site across research, education, nutrition and community.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead" data-region="nav">
+  <div class="masthead-inner">
+    <a class="brand" href="#summit" aria-label="Back to summit">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="26" height="26" focusable="false">
+          <path class="br-c" d="M16 5c3.4 4.6 7.4 7.4 6 12-1.2 4-5 5-6 9" fill="none" stroke-linecap="round"/>
+          <path class="br-c" d="M16 5c-3.4 4.6-7.4 7.4-6 12 1.2 4 5 5 6 9" fill="none" stroke-linecap="round"/>
+          <path class="br-c2" d="M13 8l6 0M13 12l6 0M14 16l4 0" fill="none" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand-name">Lia Schmid</span>
+    </a>
+    <nav class="compass" aria-label="Regions">
+      <button class="cp" data-jump="summit">Summit</button>
+      <button class="cp" data-jump="research">Research</button>
+      <button class="cp" data-jump="education">Education</button>
+      <button class="cp" data-jump="nutrition">Nutrition</button>
+      <button class="cp" data-jump="community">Community</button>
+    </nav>
+    <div class="discovered" title="Terrain discovered">
+      <span class="disc-label">Terrain</span>
+      <span class="disc-count"><b id="foundCount">0</b>/<span id="foundTotal">0</span></span>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===================== SUMMIT / ABOUT ===================== -->
+  <section class="region region-hero" id="summit" aria-labelledby="summit-title">
+    <div class="terrain" data-seed="12001" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <p class="eyebrow">B.Sc. Cognitive Science · M.Sc. Scientific Computing</p>
+      <h1 id="summit-title" class="hero-title">
+        <span class="hero-line">Lia Schmid</span>
+        <span class="hero-sub">brain–computer interfaces <em>&</em> sports nutrition</span>
+      </h1>
+      <p class="hero-lede">I build bridges between living minds, machines and the body — decoding brain signals in the lab and designing nutrition for people who move.</p>
+      <div class="hero-actions">
+        <button class="cta" data-descend="research">Descend into the terrain <span aria-hidden="true">↓</span></button>
+        <a class="cta cta-quiet" href="#about">Meet the field notes</a>
+      </div>
+      <p class="hero-hint">This terrain has camps to visit. Everything is clickable — hover, tap, or explore with the keyboard.</p>
+    </div>
+    <div class="scrolldot" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ===================== ABOUT NOTES ===================== -->
+  <section class="region" id="about" aria-labelledby="about-title">
+    <div class="terrain" data-seed="12002" aria-hidden="true"></div>
+    <div class="region-head">
+      <p class="want">01 · The summit</p>
+      <h2 id="about-title">Field notes &amp; coordinates</h2>
+      <p class="region-intro">The people I am — a quick orientation before you wander further down. Discover a note to read more.</p>
+    </div>
+    <div class="nodes" data-region="summit">
+      <button class="node" data-open="about_bio">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">How I think</span>
+        <span class="node-tag">orientation · 2 min</span>
+      </button>
+      <button class="node" data-open="about_interests">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Off the clock</span>
+        <span class="node-tag">languages · mountains · people</span>
+      </button>
+      <button class="node" data-open="about_contact">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Coordinates</span>
+        <span class="node-tag">contact &amp; links</span>
+      </button>
+      <button class="node node-rare" data-open="about_easter">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Pit-lane note</span>
+        <span class="node-tag">a small confession</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== RESEARCH ===================== -->
+  <section class="region" id="research" aria-labelledby="research-title">
+    <div class="terrain" data-seed="13001" aria-hidden="true"></div>
+    <div class="region-head">
+      <p class="want">02 · Research range</p>
+      <h2 id="research-title">Where I do most of my thinking</h2>
+      <p class="region-intro">Peaks of the journey so far — labs, projects and papers. Each camp holds a deeper record.</p>
+    </div>
+    <div class="nodes" data-region="research">
+      <button class="node" data-open="work_phuse">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">BCI Researcher · PHuSe Lab</span>
+        <span class="node-tag">Milan · 2025 — now</span>
+      </button>
+      <button class="node" data-open="work_tutor">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Tutor · Python &amp; Databases</span>
+        <span class="node-tag">Catholic University · 2026</span>
+      </button>
+      <button class="node" data-open="proj_brain">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">BrainCapNet</span>
+        <span class="node-tag">EEG → user intent</span>
+      </button>
+      <button class="node" data-open="proj_thesis">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Choroid Plexus thesis</span>
+        <span class="node-tag">MRI · T1×FLAIR</span>
+      </button>
+      <button class="node" data-open="earlier">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Earlier terrain</span>
+        <span class="node-tag">EMCL · vision &amp; cognition · EEG attention</span>
+      </button>
+      <button class="node" data-open="publications">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Publications</span>
+        <span class="node-tag">5 records</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== EDUCATION ===================== -->
+  <section class="region" id="education" aria-labelledby="education-title">
+    <div class="terrain" data-seed="14001" aria-hidden="true"></div>
+    <div class="region-head">
+      <p class="want">03 · Education valley</p>
+      <h2 id="education-title">The course of the river</h2>
+      <p class="region-intro">Degrees and the detours across borders that shaped them.</p>
+    </div>
+    <div class="nodes" data-region="education">
+      <button class="node" data-open="edu_msc">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">M.Sc. Scientific Computing</span>
+        <span class="node-tag">Heidelberg · 1,1</span>
+      </button>
+      <button class="node" data-open="edu_bsc">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">B.Sc. Cognitive Science</span>
+        <span class="node-tag">Tübingen · 1,47</span>
+      </button>
+      <button class="node" data-open="edu_abroad">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Study abroad</span>
+        <span class="node-tag">Milan · Lisbon</span>
+      </button>
+      <button class="node" data-open="edu_teaching">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">Teaching &amp; counselling</span>
+        <span class="node-tag">maths tutor · student counselling</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== NUTRITION ===================== -->
+  <section class="region" id="nutrition" aria-labelledby="nutrition-title">
+    <div class="terrain" data-seed="15001" aria-hidden="true"></div>
+    <div class="region-head">
+      <p class="want">04 · Nutrition fields</p>
+      <h2 id="nutrition-title">Feeding performance &amp; recovery</h2>
+      <p class="region-intro">A parallel path as a certified sports nutritionist. Credentials grow like seasons — select a crop to view it.</p>
+    </div>
+    <div class="nodes nodes-certs" data-region="nutrition" id="nutritionNodes">
+      <!-- certificates rendered from certificates.json -->
+      <noscript>Please enable JavaScript to view credentials.</noscript>
+    </div>
+    <p class="cert-note">Credentials load from certificates.json — <a href="certificates.json" target="_blank" rel="noopener">view the data file</a>.</p>
+  </section>
+
+  <!-- ===================== COMMUNITY ===================== -->
+  <section class="region" id="community" aria-labelledby="community-title">
+    <div class="terrain" data-seed="16001" aria-hidden="true"></div>
+    <div class="region-head">
+      <p class="want">05 · Community grove</p>
+      <h2 id="community-title">Roots outside the lab</h2>
+      <p class="region-intro">Where I give back — sidelines, villages and student halls. Volunteering is a first-class trail here, not a footnote.</p>
+    </div>
+    <div class="nodes" data-region="community" id="volunteerNodes">
+      <!-- volunteering rendered from certificates.json -->
+      <noscript>Please enable JavaScript to view volunteering.</noscript>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>Hand-built terrain · © 2026 Lia Schmid</p>
+  <p class="foot-fine">Research, nutrition &amp; a bit of pit lane.</p>
+</footer>
+
+<!-- ===================== DETAIL PANEL ===================== -->
+<div class="panel-backdrop" id="panelBackdrop" hidden>
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+    <button class="panel-close" id="panelClose" aria-label="Close">×</button>
+    <div class="panel-body" id="panelBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

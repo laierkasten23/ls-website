@@ -1,0 +1,93 @@
+{
+  "nutrition": [
+    {
+      "title": "Anatomy & Biomechanics",
+      "qualification": "Assistant Trainer \u00b7 Longevity Fitness",
+      "issuer": "Accademia Italiana Fitness (AIF)",
+      "date": "2025-12-22",
+      "credentialId": "AIF n. 202279554",
+      "doc": "certificates/nutrition-01-tesserino.pdf",
+      "category": "Sports Science",
+      "note": "Physiology & biomechanics foundation course for the fitness-trainer path."
+    },
+    {
+      "title": "Nutrition in Sport \u2014 Level I",
+      "qualification": "Assistant Trainer \u00b7 Nutrition",
+      "issuer": "Accademia Italiana Fitness (AIF)",
+      "date": "2025-12-14",
+      "credentialId": "AIF n. 202279550",
+      "doc": "certificates/nutrition-02-tesserino.pdf",
+      "category": "Sports Nutrition",
+      "note": "First level of professional sports-nutrition training."
+    },
+    {
+      "title": "Nutrition in Sport \u2014 Level II",
+      "qualification": "Assistant Trainer \u00b7 Nutrition",
+      "issuer": "Accademia Italiana Fitness (AIF) \u00b7 ERC Register",
+      "date": "2026-03-23",
+      "credentialId": "AIF n. 202279551",
+      "doc": "certificates/nutrition-03-erc-card.pdf",
+      "category": "Sports Nutrition",
+      "note": "Intermediate level, registered on the European Register of certified fitness professionals."
+    },
+    {
+      "title": "Nutrition in Sport \u2014 Level III",
+      "qualification": "Instructor \u00b7 Nutrition",
+      "issuer": "Accademia Italiana Fitness (AIF)",
+      "date": "2026-08-11",
+      "credentialId": "AIF n. 202279552",
+      "doc": "certificates/nutrition-04-tesserino.pdf",
+      "category": "Sports Nutrition",
+      "note": "Top instructor level of the nutrition-in-sport track."
+    },
+    {
+      "title": "Fitness Teacher \u2014 EQF Level 3",
+      "qualification": "Fitness Teacher \u00b7 European recognised",
+      "issuer": "ESWA \u2014 European Sport & Wellness Alliance",
+      "date": "2026-08-07",
+      "credentialId": "ESWA-IT-2026-01251",
+      "doc": "certificates/eswa-fitness-teacher.pdf",
+      "category": "Sports Science",
+      "note": "Classroom training plus supervised practice, aligned to the European Qualifications Framework."
+    }
+  ],
+
+  "volunteering": [
+    {
+      "role": "Olympic Games Milano Cortina 2026",
+      "detail": "Event Service volunteer at the Olympic Village, Milan",
+      "location": "Milan, Italy",
+      "period": "Jan \u2013 Feb 2026",
+      "doc": "volunteering/sicurezza-modulo-generale.pdf",
+      "docLabel": "Safety training (Modulo Generale)"
+    },
+    {
+      "role": "Wizz Air Milano Marathon 2026",
+      "detail": "Medal engraving, pacers' baggage and dog-run support",
+      "location": "Milan, Italy",
+      "period": "Apr 2026",
+      "doc": "volunteering/wizzair-milano-marathon.png",
+      "docLabel": "Volunteer certificate"
+    },
+    {
+      "role": "I-HELP for Milano Marathon 2026",
+      "detail": "Staff training course for marathon volunteer support",
+      "location": "Milan, Italy",
+      "period": "Apr 2026",
+      "doc": "volunteering/ihelp-staff-milano-marathon.pdf",
+      "docLabel": "Course certificate"
+    },
+    {
+      "role": "Study Commission \u00b7 Cognitive Science",
+      "detail": "Member of the study commission (teaching plan, student matters)",
+      "location": "T\u00fcbingen, Germany",
+      "period": "2018 \u2013 2021"
+    },
+    {
+      "role": "Student Council (FSK) \u00b7 Cognitive Science",
+      "detail": "Representing students, linking students and instructors, organising events",
+      "location": "T\u00fcbingen, Germany",
+      "period": "2018 \u2013 2021"
+    }
+  ]
+}
