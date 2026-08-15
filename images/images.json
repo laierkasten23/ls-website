@@ -28,7 +28,7 @@
       "section": "research",
       "title": "EEG Sessions",
       "caption": "",
-      "attachTo": null,
+      "attachTo": "proj_brain",
       "images": [
         {
           "file": "work_eeg1.JPG",
@@ -144,22 +144,6 @@
       "count": 2
     },
     {
-      "id": "hobby__climb",
-      "category": "hobby",
-      "section": "personal",
-      "title": "Climbing",
-      "caption": "",
-      "attachTo": null,
-      "images": [
-        {
-          "file": "hobby1_climb.JPG",
-          "src": "images/web/hobby1_climb.jpg",
-          "caption": ""
-        }
-      ],
-      "count": 1
-    },
-    {
       "id": "hobby__hike",
       "category": "hobby",
       "section": "personal",
@@ -170,6 +154,22 @@
         {
           "file": "hobby6_hike1.JPG",
           "src": "images/web/hobby6_hike1.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "hobby__nature",
+      "category": "hobby",
+      "section": "personal",
+      "title": "Nature",
+      "caption": "",
+      "attachTo": null,
+      "images": [
+        {
+          "file": "hobby7_nature.jpg",
+          "src": "images/web/hobby7_nature.jpg",
           "caption": ""
         }
       ],
@@ -201,17 +201,12 @@
       "attachTo": null,
       "images": [
         {
-          "file": "hobby3_f1.JPG",
-          "src": "images/web/hobby3_f1.jpg",
-          "caption": ""
-        },
-        {
           "file": "hobby5_f1.gif",
           "src": "images/hobby5_f1.gif",
           "caption": ""
         }
       ],
-      "count": 2
+      "count": 1
     }
   ]
 }

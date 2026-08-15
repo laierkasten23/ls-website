@@ -50,6 +50,7 @@ const SECTION_FOR = {
    edu_graduation -> inline figure after the "The course of the river" heading */
 const ATTACH = {
   "work__lab": "work_phuse",
+  "work__eeg": "proj_brain",
   "volunteer__milanocortina": "vol_0",
   "volunteer__wizzair": "vol_1",
   "graduation__graduation": "edu_graduation"

@@ -80,11 +80,6 @@
           "doc": "certificates/eswa-fitness-teacher.pdf",
           "category": "Sports Science",
           "note": "Classroom training plus supervised practice, aligned to the European Qualifications Framework."
-        },
-        {
-          "title": "ESWA Diploma",
-          "doc": "docs/nutrition/Diploma_ESWA_LIA_SCHMID.pdf",
-          "note": "Full ESWA diploma."
         }
       ]
     }
@@ -97,7 +92,8 @@
       "location": "Milan, Italy",
       "period": "Jan \u2013 Feb 2026",
       "doc": "volunteering/sicurezza-modulo-generale.pdf",
-      "docLabel": "Safety training (Modulo Generale)"
+      "docLabel": "Safety training (Modulo Generale)",
+      "bg": "images/web/volunteer_milanocortina3.jpg"
     },
     {
       "role": "Wizz Air Milano Marathon 2026",
@@ -106,16 +102,15 @@
       "period": "Apr 2026",
       "doc": "volunteering/wizzair-milano-marathon.png",
       "docLabel": "Volunteer certificate",
-      "adjacentTo": "milano-marathon-2026"
-    },
-    {
-      "role": "I-HELP for Milano Marathon 2026",
-      "detail": "Staff training course for marathon volunteer support",
-      "location": "Milan, Italy",
-      "period": "Apr 2026",
-      "doc": "volunteering/ihelp-staff-milano-marathon.pdf",
-      "docLabel": "Course certificate",
-      "adjacentTo": "milano-marathon-2026"
+      "bg": "images/web/volunteer_wizzair.jpg",
+      "docs": [
+        {
+          "role": "I-HELP for Milano Marathon 2026",
+          "detail": "Staff training course for marathon volunteer support",
+          "doc": "volunteering/ihelp-staff-milano-marathon.pdf",
+          "docLabel": "I-HELP course certificate"
+        }
+      ]
     },
     {
       "role": "Study Commission \u00b7 Cognitive Science",

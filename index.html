@@ -27,12 +27,12 @@
       <span class="brand-name">Lia Schmid</span>
     </a>
     <nav class="compass" aria-label="Regions">
-      <button class="cp" data-jump="summit">Summit</button>
-      <button class="cp" data-jump="research">Research</button>
-      <button class="cp" data-jump="education">Education</button>
-      <button class="cp" data-jump="nutrition">Nutrition</button>
-      <button class="cp" data-jump="community">Community</button>
-      <button class="cp" data-jump="personal">Personal</button>
+      <button class="cp" data-jump="summit"><span class="cp-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M3 18l6-9 4 6 3-4 5 7H3z"/></svg></span><span>Summit</span></button>
+      <button class="cp" data-jump="research"><span class="cp-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span><span>Research</span></button>
+      <button class="cp" data-jump="education"><span class="cp-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M2 5h7a3 3 0 0 1 3 2 3 3 0 0 1 3-2h7v13h-8a2 2 0 0 0-2 2 2 2 0 0 0-2-2H2V5z"/></svg></span><span>Education</span></button>
+      <button class="cp" data-jump="nutrition"><span class="cp-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M12 21C6 21 3 14 3 7c7 0 14 3 14 9 0 3-2 5-5 5z"/><path d="M12 21c0-6 3-9 9-11"/></svg></span><span>Nutrition</span></button>
+      <button class="cp" data-jump="community"><span class="cp-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15"><circle cx="9" cy="7.5" r="3"/><path d="M3 19a6 6 0 0 1 12 0"/><circle cx="17" cy="8" r="2.5"/><path d="M15.8 19a6 6 0 0 1 2.2-4.3"/></svg></span><span>Community</span></button>
+      <button class="cp" data-jump="personal"><span class="cp-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M4 8h3l1.5-2h7L17 8h3v11H4V8z"/><circle cx="12" cy="13" r="3.2"/></svg></span><span>Personal</span></button>
     </nav>
     <div class="discovered" title="Terrain discovered">
       <span class="disc-label">Terrain</span>
@@ -42,6 +42,16 @@
 </header>
 
 <main id="main">
+
+  <!-- decorative river: a double-line "railway" of smooth bezier curves that
+       meander down the full page, passing the section headings, with mini-forest
+       clusters of slim towering conifers parked on the rails in the whitespace
+       gaps between blocks (never behind text). The rails + trees are generated
+       by drawRiver() in script.js from the live page height (so it always spans
+       the whole page) and start from the hero profile halo (item 2 rule). -->
+  <div class="river" aria-hidden="true">
+    <svg class="river-svg" focusable="false"></svg>
+  </div>
 
   <!-- ===================== SUMMIT / ABOUT ===================== -->
   <section class="region region-hero" id="summit" aria-labelledby="summit-title">
@@ -61,9 +71,23 @@
           </div>
           <p class="hero-hint">This terrain has camps to visit. Everything is clickable — hover, tap, or explore with the keyboard.</p>
         </div>
-        <figure class="hero-figure" id="heroFigure">
-          <!-- portrait injected from images/images.json -->
-        </figure>
+        <div class="hero-profile">
+          <figure class="hero-figure" id="heroFigure">
+            <!-- portrait injected from images/images.json -->
+          </figure>
+          <ul class="contact-row" aria-label="Contact">
+            <li><a class="contact-link" href="mailto:lia.schmid98@gmx.de" aria-label="Email">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            </a></li>
+            <li><a class="contact-link" href="tel:+4917624599271" aria-label="Phone">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 4c0-1.1.9-2 2-2h2c.9 0 1.7.6 1.9 1.5l.7 2.7c.2.7-.1 1.5-.7 2l-1.3 1a13 13 0 0 0 5 5l1-1.3c.5-.6 1.3-.9 2-.7l2.7.7c.9.2 1.5 1 1.5 1.9v2c0 1.1-.9 2-2 2C9.9 21 3 14.1 3 6z"/></svg>
+            </a></li>
+            <li><a class="contact-link" href="https://www.linkedin.com/in/lia-schmid-54bb4723a/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="7.5" cy="8" r="1.3"/><path d="M7.5 11v6"/><path d="M11.5 11v6"/><path d="M11.5 13.5c0-1.8 1.7-2.5 3-2.5s1.7 1 1.7 2.5V17"/></svg>
+            </a></li>
+          </ul>
+          <p class="name-cv"><a class="cv-link" href="docs/CV_2026_TeamLead_DataOps.pdf" target="_blank" rel="noopener">Show CV ↗</a></p>
+        </div>
       </div>
     </div>
     <div class="scrolldot" aria-hidden="true"><span></span></div>
@@ -72,7 +96,7 @@
   <!-- ===================== ABOUT NOTES ===================== -->
   <section class="region" id="about" aria-labelledby="about-title">
     <div class="terrain" data-seed="12002" aria-hidden="true"></div>
-    <div class="region-head">
+    <div class="region-head"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M3 18l6-9 4 6 3-4 5 7H3z"/></svg></span>
       <p class="want">01 · The summit</p>
       <h2 id="about-title">Field notes &amp; coordinates</h2>
       <p class="region-intro">The people I am — a quick orientation before you wander further down. Discover a note to read more.</p>
@@ -95,7 +119,7 @@
       </button>
       <button class="node node-rare" data-open="about_easter">
         <span class="node-dot" aria-hidden="true"></span>
-        <span class="node-title">Pit-lane note</span>
+        <span class="node-title">Root note</span>
         <span class="node-tag">a small confession</span>
       </button>
     </div>
@@ -105,26 +129,26 @@
   <!-- ===================== RESEARCH ===================== -->
   <section class="region" id="research" aria-labelledby="research-title">
     <div class="terrain" data-seed="13001" aria-hidden="true"></div>
-    <div class="region-head">
+    <div class="region-head"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span>
       <p class="want">02 · Research range</p>
       <h2 id="research-title">Where I do most of my thinking</h2>
       <p class="region-intro">Peaks of the journey so far — labs, projects and papers. Each camp holds a deeper record.</p>
     </div>
     <div class="nodes" data-region="research">
-      <button class="node" data-open="work_phuse">
+      <button class="node bg-box" data-open="work_phuse" style="background-image:url('images/web/work_lab2.jpg')">
         <span class="node-dot" aria-hidden="true"></span>
         <span class="node-title">BCI Researcher · PHuSe Lab</span>
         <span class="node-tag">Milan · 2025 — now</span>
+      </button>
+      <button class="node bg-box" data-open="proj_brain" style="background-image:url('images/web/work_eeg1.jpg')">
+        <span class="node-dot" aria-hidden="true"></span>
+        <span class="node-title">BrainCapNet</span>
+        <span class="node-tag">EEG → user intent</span>
       </button>
       <button class="node" data-open="work_tutor">
         <span class="node-dot" aria-hidden="true"></span>
         <span class="node-title">Tutor · Python &amp; Databases</span>
         <span class="node-tag">Catholic University · 2026</span>
-      </button>
-      <button class="node" data-open="proj_brain">
-        <span class="node-dot" aria-hidden="true"></span>
-        <span class="node-title">BrainCapNet</span>
-        <span class="node-tag">EEG → user intent</span>
       </button>
       <button class="node" data-open="proj_thesis">
         <span class="node-dot" aria-hidden="true"></span>
@@ -148,7 +172,7 @@
   <!-- ===================== EDUCATION ===================== -->
   <section class="region" id="education" aria-labelledby="education-title">
     <div class="terrain" data-seed="14001" aria-hidden="true"></div>
-    <div class="region-head">
+    <div class="region-head"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M2 5h7a3 3 0 0 1 3 2 3 3 0 0 1 3-2h7v13h-8a2 2 0 0 0-2 2 2 2 0 0 0-2-2H2V5z"/></svg></span>
       <p class="want">03 · Education valley</p>
       <h2 id="education-title">The course of the river</h2>
       <p class="region-intro">Degrees and the detours across borders that shaped them.</p>
@@ -180,7 +204,7 @@
   <!-- ===================== NUTRITION ===================== -->
   <section class="region" id="nutrition" aria-labelledby="nutrition-title">
     <div class="terrain" data-seed="15001" aria-hidden="true"></div>
-    <div class="region-head">
+    <div class="region-head"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M12 21C6 21 3 14 3 7c7 0 14 3 14 9 0 3-2 5-5 5z"/><path d="M12 21c0-6 3-9 9-11"/></svg></span>
       <p class="want">04 · Nutrition fields</p>
       <h2 id="nutrition-title">Feeding performance &amp; recovery</h2>
       <p class="region-intro">A parallel path as a certified sports nutritionist. Credentials grow like seasons — select a crop to view it.</p>
@@ -195,7 +219,7 @@
   <!-- ===================== COMMUNITY ===================== -->
   <section class="region" id="community" aria-labelledby="community-title">
     <div class="terrain" data-seed="16001" aria-hidden="true"></div>
-    <div class="region-head">
+    <div class="region-head"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><circle cx="9" cy="7.5" r="3"/><path d="M3 19a6 6 0 0 1 12 0"/><circle cx="17" cy="8" r="2.5"/><path d="M15.8 19a6 6 0 0 1 2.2-4.3"/></svg></span>
       <p class="want">05 · Community grove</p>
       <h2 id="community-title">Roots outside the lab</h2>
       <p class="region-intro">Where I give back — sidelines, villages and student halls. Volunteering is a first-class trail here, not a footnote.</p>
@@ -210,9 +234,9 @@
   <!-- ===================== PERSONAL ===================== -->
   <section class="region" id="personal" aria-labelledby="personal-title">
     <div class="terrain" data-seed="17001" aria-hidden="true"></div>
-    <div class="region-head">
+    <div class="region-head"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M4 8h3l1.5-2h7L17 8h3v11H4V8z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
       <p class="want">06 · Off the clock</p>
-      <h2 id="personal-title">Trails, camps &amp; pit lanes</h2>
+      <h2 id="personal-title">Trails, camps &amp; curiosity</h2>
       <p class="region-intro">A flat roll of personal shots — no filing, just the pause between sessions.</p>
     </div>
     <div class="gallery" id="galleryPersonal" data-section="personal"></div>
@@ -222,7 +246,7 @@
 
 <footer class="foot">
   <p>Hand-built terrain · © 2026 Lia Schmid</p>
-  <p class="foot-fine">Research, nutrition &amp; a bit of pit lane.</p>
+  <p class="foot-fine">Research, nutrition &amp; bit of curiosity.</p>
 </footer>
 
 <!-- ===================== DETAIL PANEL ===================== -->

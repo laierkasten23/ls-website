@@ -98,6 +98,225 @@
   });
 
   /* ---------------------------------------------------------------- */
+  /*  Background river — pass 4                                        */
+  /*  A double "railway" line of smooth bezier curves that meanders     */
+  /*  down the full page height, passing the section headings, with     */
+  /*  conifer "mini-forest" clusters whose positions are sampled        */
+  /*  directly OFF the rail <path> elements via getPointAtLength() so   */
+  /*  they sit on the curve and follow its drift. Trees are kept only   */
+  /*  where the rail passes through a whitespace gap between blocks,    */
+  /*  never behind text. Generated from the live page height so they    */
+  /*  always span the whole document.                                   */
+  /* ---------------------------------------------------------------- */
+  function drawRiver() {
+    var river = document.querySelector(".river");
+    var svg = river && river.querySelector(".river-svg");
+    if (!river || !svg) return;
+    var main = document.getElementById("main");
+    var W = river.clientWidth || main.clientWidth;
+    var H = river.clientHeight || main.scrollHeight;
+    if (!W || !H) return;
+
+    var svgNS = "http://www.w3.org/2000/svg";
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.textContent = "";
+
+    function round(v) { return Math.round(v * 10) / 10; }
+
+    /* --- control points: meander to alternate sides at each heading ---
+       The trail starts from the hero profile halo (bottom-centre of the
+       portrait figure), so the railway visibly emerges from the portrait. */
+    var haloEl = document.getElementById("heroFigure");
+    var startX = W * 0.5, startY = 0;
+    if (haloEl) {
+      var hb = haloEl.getBoundingClientRect();
+      startX = hb.left + hb.width / 2;
+      startY = Math.max(0, hb.top + window.scrollY + hb.height * 0.92);
+    }
+    var pts = [{ x: startX, y: startY }];
+    var left = W * 0.12, right = W * 0.88, side = 1;
+    Array.prototype.forEach.call(main.querySelectorAll(".region-head"), function (h) {
+      var r = h.getBoundingClientRect();
+      var y = r.top + window.scrollY;
+      if (y <= 0 || y >= H) return;
+      pts.push({ x: side === 1 ? right : left, y: y });
+      side = -side;
+    });
+    if (pts[pts.length - 1].y < H - 40) pts.push({ x: W * 0.5, y: H });
+
+    /* --- Catmull-Rom path string for the centreline (rails are ±offset
+       copies of these control points) --- */
+    function pathString(points) {
+      var d = "M" + round(points[0].x) + "," + round(points[0].y);
+      for (var i = 0; i < points.length - 1; i++) {
+        var p0 = points[i - 1] || points[0], p1 = points[i],
+            p2 = points[i + 1], p3 = points[i + 2] || p2;
+        var c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+        var c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+        d += " C" + round(c1x) + "," + round(c1y) + " " + round(c2x) + "," + round(c2y) +
+          " " + round(p2.x) + "," + round(p2.y);
+      }
+      return d;
+    }
+    var gap = Math.max(10, Math.min(16, W * 0.012));
+
+    /* --- two parallel rails (offset copies of the control points) --- */
+    var railEls = [];
+    [gap, -gap].forEach(function (o, i) {
+      var off = pts.map(function (p) { return { x: p.x + o, y: p.y }; });
+      var p = document.createElementNS(svgNS, "path");
+      p.setAttribute("class", "river-rail");
+      p.setAttribute("d", pathString(off));
+      svg.appendChild(p);
+      railEls.push(p);
+    });
+
+    /* --- conifer "mini-forests" sampled directly ON the rail paths ---
+       ONE silhouette — a slim tall conifer (stacked tiers). Positions are NOT
+       hand-set X/Y or per-gap centreline constants: each tree's (x,y) is a point
+       sampled straight off one of the rendered rail <path> elements via
+       getPointAtLength() (equally along the path's arc length), so trees track
+       the curve's own left-right drift and sit right on / immediately beside it.
+       We step down each rail and keep consecutive samples whose y falls inside a
+       free whitespace gap (measured from every content block's y-range, expanded
+       by a safety margin, aligned to SVG-local space) → clusters form only in
+       inter-section gaps, never behind text. A small perpendicular nudge widens
+       the "forest" so the line runs through/beside the trunks. An inter-cluster
+       min gap stops the page being one continuous tree line. Deterministic PRNG
+       keeps positions stable across redraws. */
+    function prng(i, salt) {
+      var x = Math.sin(i * 127.1 + (salt || 0) * 311.7) * 43758.5453;
+      return x - Math.floor(x);
+    }
+    function coniferPath(x, y, s) {
+      var w = s * 0.3, tiers = 3, d = "";
+      for (var t = 0; t < tiers; t++) {
+        var base = y - t * s * 0.26, tip = y - (t + 0.8) * s * 0.34;
+        var half = w * (1 - t * 0.24);
+        d += " M" + round(x - half) + "," + round(base) +
+             " L" + round(x) + "," + round(tip) +
+             " L" + round(x + half) + "," + round(base);
+      }
+      return d;
+    }
+    /* invert: is a given y (SVG-local) inside any free gap? gaps sorted asc. */
+    function inGap(gaps, y) {
+      for (var i = 0; i < gaps.length; i++) {
+        if (y < gaps[i].top) return false;         /* gaps are sorted: no later one can contain it */
+        if (y <= gaps[i].bot) return true;
+      }
+      return false;
+    }
+
+    /* Build the list of vertical bands that are FREE of text content.
+       Occupied = every content block's [top, bottom] (absolute), expanded by a
+       margin so trees keep clear of text. The gaps are the complement of those
+       occupied intervals across the page. Coordinates are converted to the
+       SAME local space as the SVG (the river's top) so they line up with the
+       tree positions. */
+    var svgTop = river.getBoundingClientRect().top + window.scrollY;
+    function freeGaps() {
+      var occ = [];
+      var SELECTORS = ".region-head,.region-intro,.nodes,.node,.gallery," +
+        ".gallery-group,.hero-copy,.hero-profile,.cert-note,.foot,.eyebrow," +
+        ".hero-title,.hero-lede,.hero-actions,.hero-hint,.name-cv,.contact-row";
+      var MARGIN = 40;
+      Array.prototype.forEach.call(main.querySelectorAll(SELECTORS), function (el) {
+        var r = el.getBoundingClientRect();
+        if (!r.height) return;
+        var top = r.top + window.scrollY - svgTop - MARGIN;
+        var bot = r.bottom + window.scrollY - svgTop + MARGIN;
+        occ.push({ top: Math.max(0, top), bot: bot });
+      });
+      occ.sort(function (a, b) { return a.top - b.top; });
+      /* merge overlapping intervals */
+      var merged = [];
+      occ.forEach(function (o) {
+        if (!merged.length || o.top > merged[merged.length - 1].bot) {
+          merged.push({ top: o.top, bot: o.bot });
+        } else if (o.bot > merged[merged.length - 1].bot) {
+          merged[merged.length - 1].bot = o.bot;
+        }
+      });
+      /* complement → free bands */
+      var last = 0, gaps = [];
+      merged.forEach(function (m) {
+        if (m.top > last) gaps.push({ top: last, bot: m.top });
+        last = Math.max(last, m.bot);
+      });
+      if (last < H) gaps.push({ top: last, bot: H });
+      return gaps;
+    }
+
+    var gaps = freeGaps();
+
+    /* Walk each rail's actual <path> and place trees ON it. Sampling by arc
+       length (getPointAtLength) means tree (x,y) follows the curve's own
+       drift. getPointAtLength() returns the path's viewBox coords, which
+       match the space freeGaps() produced (doc − svgTop) — keep y raw, do NOT
+       subtract svgTop again, or trees sit ~svgTop px off the rendered line.
+       Only samples whose y falls inside a free gap become trees: up to a small
+       max per run, with an inter-tree step so they read as a "mini forest"
+       cluster rather than one continuous line. */
+    var SAMPLE_ARC = 10;          /* arc-length steps while walking the rail (px) */
+    var MAX_PER_RUN = 5;          /* trees per cluster before forcing a break */
+    var MIN_TREE_STEP = 18;       /* min y gap between consecutive trees in a run */
+    var NUDGE = 9;                /* sideways spread so the line runs through/beside */
+
+    function treeLocationsOn(el) {
+      var out = [], L = el.getTotalLength();
+      var n = Math.max(2, Math.ceil(L / SAMPLE_ARC));
+      var lastY = -1e9, runCount = 0;
+      for (var i = 0; i <= n; i++) {
+        var p = el.getPointAtLength(L * (i / n));
+        var y = p.y, x = p.x;                 /* rail's own (viewBox) coordinate */
+        if (!inGap(gaps, y)) { lastY = -1e9; runCount = 0; continue; }
+        if (y - lastY < MIN_TREE_STEP) continue;
+        if (runCount >= MAX_PER_RUN) { runCount = 0; lastY = -1e9; continue; }
+        out.push({ x: x, y: y });
+        lastY = y; runCount++;
+      }
+      return out;
+    }
+
+    var allTrees = [];
+    for (var ri = 0; ri < railEls.length; ri++) {
+      allTrees = allTrees.concat(treeLocationsOn(railEls[ri]).map(function (t) {
+        t.rail = ri; return t;
+      }));
+    }
+    /* deterministic ordering + sideways nudge off the rail so trunks sit
+       immediately beside/touching the line instead of dead-centre on it */
+    for (var ti = 0; ti < allTrees.length; ti++) {
+      var t = allTrees[ti];
+      var side = prng(ti, 2) > 0.5 ? 1 : -1;
+      var s = 13 + prng(ti, 4) * 9;                       /* size 13–22 */
+      /* keep the whole tree (tip rises ~s above base) inside the gap it landed in */
+      var g = null;
+      for (var k = 0; k < gaps.length; k++) if (t.y >= gaps[k].top && t.y <= gaps[k].bot) { g = gaps[k]; break; }
+      var treeY = t.y;
+      if (g) {
+        var minTop = g.top + s;                           /* top of canopy ≥ gap top */
+        var maxBot = g.bot;
+        if (maxBot < minTop) continue;                    /* gap too short for this size */
+        treeY = Math.max(minTop, Math.min(maxBot, t.y));
+      }
+      var treeX = t.x + side * NUDGE + side * prng(ti, 6) * 4;
+      var tree = document.createElementNS(svgNS, "path");
+      tree.setAttribute("class", "river-tree");
+      tree.setAttribute("d", coniferPath(treeX, treeY, s));
+      svg.appendChild(tree);
+    }
+  }
+  drawRiver();
+  var riverRaf = null;
+  function redrawRiver() {
+    if (riverRaf) return;
+    riverRaf = requestAnimationFrame(function () { riverRaf = null; drawRiver(); });
+  }
+  window.addEventListener("resize", redrawRiver);
+
+  /* ---------------------------------------------------------------- */
   /*  Contact (edit socials/URLs here)                                 */
   /* ---------------------------------------------------------------- */
   var CONTACT = {
@@ -105,7 +324,6 @@
     phone: "+49 176 245 992 71",
     phoneTel: "+4917624599271",
     socials: [
-      { label: "laierkasten23", glyph: "instagram", url: "https://instagram.com/laierkasten23" },
       { label: "Lia Schmid", glyph: "linkedin", url: "https://www.linkedin.com/in/lia-schmid-54bb4723a/" }
     ]
   };
@@ -151,12 +369,21 @@
         "<p>To disconnect I hike in nature and spend time with family and loved ones. I love learning new languages and exploring different cultures. A habit that started with semesters abroad in Lisbon and Milan and never really stopped.</p>",
       meta: H.meta([H.pill("Hiking"), H.pill("Languages"), H.pill("Travel"), H.pill("Family")]),
     },
-    about_easter: {
-      kicker: "A small confession",
-      title: "Pit-lane note",
-      sub: "A discovery for the curious",
+    about_contact: {
+      kicker: "Reach out",
+      title: "Let's get in touch",
+      sub: "I'm happy to hear from you",
       body:
-        "<p>Every now and then, when the EEG streams are quiet and the models are training, I switch channels to the pit lane. There's something I love about races within races: The fast, precise micro-decisions, the choreography of a tyre change, a team perfectly in tempo. A little motorsport heart hiding in an otherwise organic terrain.</p>" +
+        "<p>Whether you want to discuss a research idea, a collaboration, or just say hi — I'm happy to hear from you.</p>",
+      contact: true
+    },
+
+    about_easter: {
+      kicker: "Roots",
+      title: "Two tongues, one home",
+      sub: "Why adapting feels natural",
+      body:
+        "<p>Home is the Pfalz — vineyards on one side, and on the other, a childhood spent between two languages. I grew up bilingual, which meant switching between worlds was never a big event, just something you did. I've carried that with me, and it's part of why relocating or traveling for work doesn't faze me.</p>" +
         "<p>(You found a hidden note. That's the kind of detail I hope a careful visitor notices — in a site as in code.)</p>",
       meta: H.meta([H.pill("easter egg", true)])
     },
@@ -170,15 +397,6 @@
         "<p>Conducting research on EEG-based brain–computer interfaces and building machine-learning models that decode brain signals and user intent.</p>",
       stacks: [{ label: "Workstreams", items: ["EEG BCI research", "Brain-signal decoding", "ML model evaluation", "Cross-lab coordination"] }],
       meta: H.meta([H.pill("Since 04/2025", true), H.pill("Milan, Italy"), H.pill("current")])
-    },
-    work_tutor: {
-      kicker: "Research range",
-      title: "Tutor — Computer Programming & Database Systems",
-      sub: "Catholic University of the Sacred Heart, Milan",
-      body:
-        "<p>Delivering the Python and database-systems practicum for the M.Sc. Data Science & AI for Business — designed so the whole pipeline, from code to a well-shaped query, lands quickly.</p>",
-      stacks: [{ label: "Topics", items: ["Python programming", "DBMS — MySQL, DBeaver", "Structured curricula"] }],
-      meta: H.meta([H.pill("Since 02/2026", true), H.pill("current")])
     },
     proj_brain: {
       kicker: "Research range",
@@ -194,6 +412,15 @@
       ],
       meta: H.meta([H.pill("01–11/2024", true), H.pill("Milan, Italy")])
     },
+    work_tutor: {
+      kicker: "Research range",
+      title: "Tutor — Computer Programming & Database Systems",
+      sub: "Catholic University of the Sacred Heart, Milan",
+      body:
+        "<p>Delivering the Python and database-systems practicum for the M.Sc. Data Science & AI for Business — designed so the whole pipeline, from code to a well-shaped query, lands quickly.</p>",
+      stacks: [{ label: "Topics", items: ["Python programming", "DBMS — MySQL, DBeaver"] }],
+      meta: H.meta([H.pill("02-03/2026", true)])
+    },
     proj_thesis: {
       kicker: "Research range",
       title: "Automatic segmentation of the choroid plexus",
@@ -206,7 +433,8 @@
         "Cross-institutional collaboration — Heidelberg, University of Milan and Policlinico di Milano.",
         "Skills: MRI preprocessing, manual segmentation, neuroimaging, PyTorch & MONAI."
       ],
-      meta: H.meta([H.pill("01–11/2024", true), H.pill("M.Sc. thesis", true), H.pill("final grade 1,1")])
+      meta: H.meta([H.pill("01–11/2024", true), H.pill("M.Sc. thesis", true), H.pill("final grade 1,1")]),
+      docLink: { url: "docs/Schmid_Lia_Phuse_Thesis_2024.pdf", label: "Read the thesis PDF" }
     },
     earlier: {
       kicker: "Research range",
@@ -225,10 +453,10 @@
     publications: {
       kicker: "Research range",
       title: "Publications",
-      sub: "Five records in the journal log",
+      sub: "Six records in the journal log",
       prologue: "<p>Peer-reviewed and submitted work — most recently around subject-independent EEG learning and explainable stress detection.</p>",
       pubs: [
-        { authors: "Ghezzi, O., Burger, J., Schmid, L., D'Amelio, A., Boccignone, G., Lanzarotti, R.", title: "Where the Eyes Move, the Brain Flows: Brain Decoding During Active Reading from Travelling-Wave Geometry", venue: "IEEE TCDS 2026" },
+        { authors: "Ghezzi, O., Schmid, L., D'Amelio, A., Boccignone, G., Lanzarotti, R.", title: "Where the Eyes Move, the Brain Flows: Brain Decoding During Active Reading from Travelling-Wave Geometry", venue: "IEEE TCDS 2026" },
         { authors: "Schmid, L., Burger, J., D'Amelio, Lanzarotti, R.", title: "Investigating Foundation Models, Disentanglement and Latent Alignment for Subject-Independent EEG Learning", venue: "ICMI 2026" },
         { authors: "Schmid, L., Facchi, G., Agnelli, F., Bocca, G., Sacchi, L., Lanzarotti, R.", title: "Choroid Plexus Segmentation in MRI Using the Novel T1×FLAIR Modality and PSU-Mamba: Projective Scan U-Mamba Approach", venue: "Pattern Recognition Letters, Elsevier (2025)" },
         { authors: "Sacchi, L., Arcaro, M., Bocca, G., Schmid, L., et al.", title: "Klotho levels in the cerebrospinal fluid are associated with choroid plexus enlargement in neurodegeneration: a preliminary study", venue: "Frontiers in Aging Neuroscience" },
@@ -251,7 +479,8 @@
       "Year abroad at Università degli Studi di Milano within the 4EU+ Erasmus programme (09/2022 – 09/2023)."
     ],
     stacks: [{ label: "Skills", items: ["Machine learning", "Neuroimaging", "PyTorch", "MONAI", "Python"] }],
-    meta: H.meta([H.pill("04/2021 – 11/2024", true), H.pill("grade 1,1")])
+    meta: H.meta([H.pill("04/2021 – 11/2024", true), H.pill("grade 1,1")]),
+    docLink: { url: "docs/Schmid_Lia_Phuse_Thesis_2024.pdf", label: "Read the thesis PDF" }
   };
   DATA.edu_bsc = {
     kicker: "Education valley",
@@ -345,24 +574,20 @@
     }
     if (item.stacks) html += H.stacks(item.stacks);
     if (item.contact) html += renderContact();
+    if (item.docLink) html += '<div class="panel-actions"><a class="cta" href="' + esc(item.docLink.url) + '" target="_blank" rel="noopener">' + esc(item.docLink.label) + ' ↗</a></div>';
     return html;
   }
 
   /* ---------------------------------------------------------------- */
   /*  Discovered / visited tracking (real persistent state)            */
   /* ---------------------------------------------------------------- */
-  var STORE_KEY = "lia_terrain_discovered_v1";
   var discovered = {};
-  try { discovered = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { discovered = {}; }
 
   var foundCount = document.getElementById("foundCount");
   var foundTotal = document.getElementById("foundTotal");
 
-  function save() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(discovered)); } catch (e) {}
-  }
   function markDiscovered(key) {
-    discovered[key] = true; save(); updateCounter();
+    discovered[key] = true; updateCounter();
   }
   function updateCounter() {
     if (foundCount) foundCount.textContent = Object.keys(discovered).length;
@@ -651,52 +876,48 @@
 
   function volNode(v, i) {
     var doc = v.doc ? '<span class="node-tag">· ' + esc(v.docLabel || "certificate") + "</span>" : "";
-    return '<button class="node vol-node" data-volidx="' + i + '">' +
+    var bg = v.bg ? ' style="background-image:url(\'' + esc(v.bg) + '\')"' : "";
+    return '<button class="node vol-node' + (v.bg ? " bg-box" : "") + '" data-volidx="' + i + '"' + bg + '>' +
       '<span class="node-dot" aria-hidden="true"></span>' +
       '<span class="node-title">' + esc(v.role) + "</span>" +
       '<span class="node-tag">' + esc(v.period) + doc + "</span></button>";
   }
+
+  function volDocs(v) {
+    var items = [];
+    if (v.doc) items.push({ src: v.doc, title: v.docLabel || "Certificate", caption: v.role, kind: kindOf(v.doc) });
+    (v.docs || []).forEach(function (d) {
+      if (d.doc) items.push({ src: d.doc, title: d.docLabel || "Certificate", caption: d.role || v.role, kind: kindOf(d.doc) });
+    });
+    return items;
+  }
+
   function openVol(el) {
     var idx = parseInt(el.getAttribute("data-volidx"), 10);
     if (window.__vols && window.__vols[idx]) {
       var v = window.__vols[idx];
-      var adjoined = [];
-      if (v.adjacentTo) {
-        (window.__vols || []).forEach(function (o, i) {
-          if (o.adjacentTo === v.adjacentTo && i !== idx) adjoined.push(o);
-        });
-      }
-      var docs = adjoined.length ? [{ own: v }, { own: adjoined[0] }] : [];
+      var docs = volDocs(v);
       var html =
         '<p class="panel-kicker">Community grove</p>' +
         "<h3>" + esc(v.role) + "</h3>" +
         (v.detail ? '<p class="panel-sub">' + esc(v.detail) + "</p>" : "") +
         H.meta([H.pill(esc(v.period), true), v.location ? H.pill(esc(v.location)) : ""]) +
-        (v.doc ? '<div class="vol-preview">' +
-          '<button class="cert-tile" data-volpreview="1">' +
-          '<span class="cert-thumb"><img src="' + esc(docThumb(v.doc)) + '" alt="" loading="lazy" onerror="this.closest(\'.cert-thumb\').classList.add(\'no-thumb\')"></span>' +
-          '<span class="cert-tile-title">' + esc(v.docLabel || "Certificate") + "</span>" +
-          "</button></div>" : "") +
-        (v.doc ? '<div class="panel-actions"><a class="cta cta-quiet" href="' + esc(v.doc) + '" target="_blank" rel="noopener">View ' + esc(v.docLabel || "certificate") + " →</a></div>" : "") +
+        (docs.length ? '<div class="vol-preview"><div class="cert-grid">' +
+          docs.map(function (d, di) {
+            return '<button class="cert-tile" data-volpreview="' + di + '">' +
+              '<span class="cert-thumb"><img src="' + esc(docThumb(d.src)) + '" alt="" loading="lazy" onerror="this.closest(\'.cert-thumb\').classList.add(\'no-thumb\')"></span>' +
+              '<span class="cert-tile-title">' + esc(d.title) + "</span></button>";
+          }).join("") +
+          "</div></div>" : "") +
+        (docs.length ? '<div class="panel-actions"><a class="cta cta-quiet" href="' + esc(docs[0].src) + '" target="_blank" rel="noopener">View ' + esc(docs[0].title) + " →</a></div>" : "") +
         attachedGalleryHTML("vol_" + idx);
       openPanel(html, el);
-      var pv = panelBody.querySelector("[data-volpreview]");
-      if (pv) pv.addEventListener("click", function () {
-        openViewer(certItemsForVol(v, adjoined), 0, pv);
+      panelBody.querySelectorAll("[data-volpreview]").forEach(function (pv) {
+        pv.addEventListener("click", function () {
+          openViewer(docs, parseInt(pv.getAttribute("data-volpreview"), 10), pv);
+        });
       });
     }
-  }
-
-  /* The I-HELP and Wizz Air certificates share the "milano marathon" docs
-     row: opening either shows both, adjacent, in the same viewer. */
-  function certItemsForVol(v, adjoined) {
-    var items = [{ src: v.doc, title: v.docLabel || "Certificate", caption: v.role, kind: kindOf(v.doc) }];
-    if (adjoined && adjoined.length) {
-      adjoined.forEach(function (a) {
-        if (a.doc) items.push({ src: a.doc, title: a.docLabel || "Certificate", caption: a.role, kind: kindOf(a.doc) });
-      });
-    }
-    return items;
   }
 
   function loadJson() {
@@ -734,6 +955,7 @@
           });
         }
         updateTotals(); applyVisited();
+        redrawRiver();
       })
       .catch(function (err) {
         console.error("Could not load certificates.json:", err);
@@ -837,18 +1059,18 @@
     return '<div class="panel-gallery">' + galleryGroupHTML(g) + "</div>";
   }
 
-  /* "The course of the river" heading gets its graduation photo inline. */
+  /* "The course of the river" region gets the graduation shot as a masked
+     background treatment (behind the section content, not a foreground figure). */
   function renderInlineGraduation() {
     var g = attachedGroups["edu_graduation"];
-    var heading = document.getElementById("education-title");
-    if (!g || !g.images || !g.images.length || !heading) return;
+    var region = document.getElementById("education");
+    if (!g || !g.images || !g.images.length || !region) return;
     var im = g.images[0];
-    var fig = document.createElement("figure");
-    fig.className = "edu-photo";
-    fig.innerHTML =
-      '<img src="' + esc(im.src) + '" alt="' + esc(im.caption || "Graduation") + '" loading="lazy" decoding="async">' +
-      (im.caption ? "<figcaption>" + esc(im.caption) + "</figcaption>" : "");
-    heading.insertAdjacentElement("afterend", fig);
+    var bg = document.createElement("div");
+    bg.className = "edu-bg";
+    bg.setAttribute("aria-hidden", "true");
+    bg.style.backgroundImage = "url('" + esc(im.src) + "')";
+    region.appendChild(bg);
   }
 
   function loadImages() {
@@ -952,7 +1174,52 @@
     document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
   }
 
-  applyVisited();
+applyVisited();
   loadJson();
   loadImages();
+  setupGuide();
+
+  /* ---------------------------------------------------------------- */
+  /*  First-visit guide — a pulsing cue on the first interactive         */
+  /*  element (the hero "Descend" CTA, visible on every fresh load).     */
+  /*  Session-only: appears each page load, dismissed forever for the    */
+  /*  session once the user interacts. No persistent storage.            */
+  /* ---------------------------------------------------------------- */
+  function setupGuide() {
+    if (!document.querySelector(".cta[data-descend]")) return;
+
+    // A page refresh otherwise restores the old scroll offset, which would
+    // leave things mid-page. Reset to the top so the cue reliably appears on
+    // every fresh load.
+    try { history.scrollRestoration = "manual"; } catch (e) {}
+
+    // Fixed-position corner chip (bottom-left). It stays put during scroll, so
+    // we don't track the hero or content at all — no lag, no collision.
+    var guide = document.createElement("div");
+    guide.className = "guide";
+    guide.hidden = true;
+    guide.innerHTML =
+      '<span class="guide-dot" aria-hidden="true"></span>' +
+      '<span>Everything is clickable — start here</span>' +
+      '<button class="guide-close" aria-label="Dismiss hint">×</button>';
+    document.body.appendChild(guide);
+
+    var done = false;
+    function dismiss() {
+      if (done) return;
+      done = true;
+      guide.remove();
+      clearTimeout(appear);
+      document.removeEventListener("pointerdown", onInteract);
+      document.removeEventListener("click", onInteract);
+    }
+    function onInteract() { dismiss(); }
+    document.addEventListener("pointerdown", onInteract);
+    document.addEventListener("click", onInteract);
+
+    // Appear shortly after load (session-only, no storage).
+    var appear = setTimeout(function () {
+      if (!done) guide.hidden = false;
+    }, 900);
+  }
 })();
