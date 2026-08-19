@@ -37,7 +37,7 @@
         },
         {
           "file": "work_eeg2.jpg",
-          "src": "images/work_eeg2.jpg",
+          "src": "images/web/work_eeg2.jpg",
           "caption": ""
         }
       ],
@@ -159,6 +159,22 @@
         {
           "file": "hobby6_hike1.JPG",
           "src": "images/web/hobby6_hike1.jpg",
+          "caption": ""
+        }
+      ],
+      "count": 1
+    },
+    {
+      "id": "hobby__museeum",
+      "category": "hobby",
+      "section": "personal",
+      "title": "Museeum",
+      "caption": "",
+      "attachTo": null,
+      "images": [
+        {
+          "file": "hobby44_museeum.gif",
+          "src": "images/hobby44_museeum.gif",
           "caption": ""
         }
       ],
