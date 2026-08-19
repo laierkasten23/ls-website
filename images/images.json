@@ -34,9 +34,14 @@
           "file": "work_eeg1.JPG",
           "src": "images/web/work_eeg1.jpg",
           "caption": ""
+        },
+        {
+          "file": "work_eeg2.jpg",
+          "src": "images/work_eeg2.jpg",
+          "caption": ""
         }
       ],
-      "count": 1
+      "count": 2
     },
     {
       "id": "work__halfmarathon",

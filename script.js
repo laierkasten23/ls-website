@@ -352,7 +352,7 @@
       title: "How I think",
       sub: "Technology with a human return address",
       body:
-        "<p>I'm a researcher and builder driven by a simple question: can technology quietly raise the quality of everyday life? I work where two worlds meet — decoding brain activity with machine learning, and supporting performance through nutrition.</p>" +
+        "<p>I'm a researcher and builder driven by a simple question: can technology quietly raise the quality of everyday life? I work where two worlds meet: Decoding brain activity with machine learning, and supporting performance through nutrition.</p>" +
         "<p>An interdisciplinary path taught me to borrow ideas across fields. I thrive in enthusiastic teams where people learn from each other, keeping social impact at the centre of technical work.</p>",
       meta: H.meta([H.pill("BCI / EEG research"), H.pill("Sports nutrition"), H.pill("Science communication")]),
       stacks: [
@@ -383,7 +383,7 @@
       title: "Two tongues, one home",
       sub: "Why adapting feels natural",
       body:
-        "<p>Home is the Pfalz — vineyards on one side, and on the other, a childhood spent between two languages. I grew up bilingual, which meant switching between worlds was never a big event, just something you did. I've carried that with me, and it's part of why relocating or traveling for work doesn't faze me.</p>" +
+        "<p>Home is the Pfalz: vineyards on one side, and on the other, a childhood spent between two languages. I grew up bilingual, which meant switching between worlds was never a big event, just something you did. I've carried that with me, and it's part of why relocating or traveling for work doesn't faze me.</p>" +
         "<p>(You found a hidden note. That's the kind of detail I hope a careful visitor notices — in a site as in code.)</p>",
       meta: H.meta([H.pill("easter egg", true)])
     },
@@ -391,7 +391,7 @@
     /* ---------- RESEARCH ---------- */
     work_phuse: {
       kicker: "Research range",
-      title: "Research Fellow — Brain–Computer Interfaces (EEG)",
+      title: "Research Fellow: Brain–Computer Interfaces (EEG)",
       sub: "PHuSe Lab · Perceptual Computing & Human Sensing Lab, University of Milan",
       body:
         "<p>Conducting research on EEG-based brain–computer interfaces and building machine-learning models that decode brain signals and user intent.</p>",
@@ -400,37 +400,36 @@
     },
     proj_brain: {
       kicker: "Research range",
-      title: "BrainCapNet — an EEG brain–computer interface",
+      title: "BrainCapNet: an EEG brain–computer interface",
       sub: "From raw signal to user intent",
       body:
         "<p>A BCI solution built around acquisition and analysis of EEG signals, developed with a team in Milan.</p>",
       bullets: [
-        "Developed the DVAE model, integrating CBRAMOD as a feature extractor with a multi-branch U-Net-like bottleneck cascade for spatial and temporal dimensions.",
-        "Running ongoing data collection for a new P300 dataset in healthy adults.",
-        "Engineered an online streaming analyser for real-time EEG buffering, filtering and predictive classification.",
-        "Co-developed and field-tested three neuro-rehabilitative games via PsychoPy with dotdotdot and Fondazione TOG — giving locked-in and neurodegenerative children a channel to communicate."
+        "Running ongoing data collection for a new P300 dataset using SSVEP paradigm.",
+        "Engineered an online streaming analyser for real-time EEG buffering, filtering, predictive classification and stress-analysis.",
+        "Co-developed and field-tested three neuro-rehabilitative games via PsychoPy with dotdotdot and Fondazione TOG. Giving locked-in and neurodegenerative children a channel to communicate."
       ],
-      meta: H.meta([H.pill("01–11/2024", true), H.pill("Milan, Italy")])
+      meta: H.meta([H.pill("Since 04/2025", true), H.pill("Milan, Italy")])
     },
     work_tutor: {
       kicker: "Research range",
-      title: "Tutor — Computer Programming & Database Systems",
+      title: "Tutor: Computer Programming & Database Systems",
       sub: "Catholic University of the Sacred Heart, Milan",
       body:
-        "<p>Delivering the Python and database-systems practicum for the M.Sc. Data Science & AI for Business — designed so the whole pipeline, from code to a well-shaped query, lands quickly.</p>",
+        "<p>Delivering the Python and database-systems practicum for the M.Sc. Data Science & AI for Business: designing the whole pipeline, from code to a well-shaped query, lands quickly.</p>",
       stacks: [{ label: "Topics", items: ["Python programming", "DBMS — MySQL, DBeaver"] }],
       meta: H.meta([H.pill("02-03/2026", true)])
     },
     proj_thesis: {
       kicker: "Research range",
       title: "Automatic segmentation of the choroid plexus",
-      sub: "Master's thesis — a novel T1×FLAIR ground truth",
+      sub: "Master's thesis: a novel T1×FLAIR ground truth",
       body:
         "<p>Working with 3D MRI of patients with neurodegenerative conditions to segment the choroid plexus, introducing the T1×FLAIR product as a ground-truth modality when contrast-enhanced T1w imaging isn't available.</p>",
       bullets: [
         "Created and validated the T1×FLAIR modality as a new segmentation ground truth.",
         "Designed and trained ML models tuned for clinical applicability.",
-        "Cross-institutional collaboration — Heidelberg, University of Milan and Policlinico di Milano.",
+        "Cross-institutional collaboration: Heidelberg, University of Milan and Policlinico di Milano.",
         "Skills: MRI preprocessing, manual segmentation, neuroimaging, PyTorch & MONAI."
       ],
       meta: H.meta([H.pill("01–11/2024", true), H.pill("M.Sc. thesis", true), H.pill("final grade 1,1")]),
@@ -441,11 +440,11 @@
       title: "Earlier terrain",
       sub: "Labs, teaching and first signals",
       body:
-        "<p>A thread of earlier posts along the way — from marine morphology to the human visual cortex.</p>",
+        "<p>A thread of earlier posts along the way: from marine morphology to the human visual cortex.</p>",
       records: [
-        { where: "Engineering Math & Computing Lab — Univ. of Heidelberg", what: "Research Assistant", when: "05/2023 – 02/2024", note: "Co-organised an analysis project on morphological structures (e.g. fish), set up Singularity containers on the university server." },
-        { where: "Vision & Cognition Lab, Werner Reichardt CIN — Tübingen", what: "Research Internship / Assistant", when: "03–12/2020", note: "Compared hierarchical processing in the human visual cortex to layers of CNNs using an fMRI experiment with neural style transfer." },
-        { where: "University project — Tübingen", what: "Selective Temporal Attention (EEG)", when: "05–09/2019", note: "Measured event-related potentials with a cap-based EEG system (Hillyard paradigm); found spatial and temporal attention modulate the N1 component." },
+        { where: "Engineering Math & Computing Lab (Univ. of Heidelberg)", what: "Research Assistant", when: "05/2023 – 02/2024", note: "Co-organised an analysis project on morphological structures (e.g. fish), set up Singularity containers on the university server." },
+        { where: "Vision & Cognition Lab, Werner Reichardt CIN (Tübingen)", what: "Research Internship / Assistant", when: "03–12/2020", note: "Compared hierarchical processing in the human visual cortex to layers of CNNs using an fMRI experiment with neural style transfer." },
+        { where: "University project (Tübingen)", what: "Selective Temporal Attention (EEG)", when: "05–09/2019", note: "Measured event-related potentials with a cap-based EEG system (Hillyard paradigm); found spatial and temporal attention modulate the N1 component." },
         { where: "Eberhard Karls University", what: "Tutor in Mathematics for Computer Science", when: "10–12/2020", note: "Covered calculus, linear algebra, optimisation and discrete mathematics for freshmen." }
       ],
       meta: H.meta([H.pill("earlier research"), H.pill("teaching")])
@@ -454,13 +453,13 @@
       kicker: "Research range",
       title: "Publications",
       sub: "Six records in the journal log",
-      prologue: "<p>Peer-reviewed and submitted work — most recently around subject-independent EEG learning and explainable stress detection.</p>",
+      prologue: "<p>Peer-reviewed and submitted work: most recently around subject-independent EEG learning and explainable stress detection.</p>",
       pubs: [
         { authors: "Ghezzi, O., Schmid, L., D'Amelio, A., Boccignone, G., Lanzarotti, R.", title: "Where the Eyes Move, the Brain Flows: Brain Decoding During Active Reading from Travelling-Wave Geometry", venue: "IEEE TCDS 2026" },
         { authors: "Schmid, L., Burger, J., D'Amelio, Lanzarotti, R.", title: "Investigating Foundation Models, Disentanglement and Latent Alignment for Subject-Independent EEG Learning", venue: "ICMI 2026" },
         { authors: "Schmid, L., Facchi, G., Agnelli, F., Bocca, G., Sacchi, L., Lanzarotti, R.", title: "Choroid Plexus Segmentation in MRI Using the Novel T1×FLAIR Modality and PSU-Mamba: Projective Scan U-Mamba Approach", venue: "Pattern Recognition Letters, Elsevier (2025)" },
         { authors: "Sacchi, L., Arcaro, M., Bocca, G., Schmid, L., et al.", title: "Klotho levels in the cerebrospinal fluid are associated with choroid plexus enlargement in neurodegeneration: a preliminary study", venue: "Frontiers in Aging Neuroscience" },
-        { authors: "Agnelli, F., Ghezzi, O., Blandano, G., Burger, J., Facchi, G., Schmid, L.", title: "Enhancing 3D Face Analysis Using Graph Convolutional Networks with Kernel-Attentive Filters", venue: "submitted, ACM/SIGAPP SAC 2025" },
+        { authors: "Agnelli, F., Ghezzi, O., Blandano, G., Burger, J., Facchi, G., Schmid, L.", title: "Enhancing 3D Face Analysis Using Graph Convolutional Networks with Kernel-Attentive Filters", venue: "ACM/SIGAPP SAC 2025" },
         { authors: "Agnelli, F., Blandano, G., Burger, J., D'Amelio, A., Facchi, G., Ghezzi, O., ... & Schmid, L.", title: "EEG-Based Mental Stress Detection: A Comparative and Explainable Study Across Tasks and Subjects", venue: "ICIAP 2025" }
       ],
       meta: H.meta([H.pill("6 records")])
@@ -502,8 +501,8 @@
     body:
       "<p>Learning is easiest when the environment changes. Both stays taught me more than the courses did.</p>",
     bullets: [
-      "4EU+ Erasmus — Università degli Studi di Milano, a full year (09/2022 – 09/2023) that became home.",
-      "Erasmus — Universidade Nova de Lisboa, Portugal (09/2019 – 01/2020)."
+      "4EU+ Erasmus: Università degli Studi di Milano, a full year (09/2022 – 09/2023) that became home.",
+      "Erasmus: Universidade Nova de Lisboa, Portugal (09/2019 – 01/2020)."
     ],
     meta: H.meta([H.pill("Milan"), H.pill("Lisbon"), H.pill("Erasmus / 4EU+")])
   };
@@ -512,10 +511,10 @@
     title: "Teaching & counselling",
     sub: "Tutoring and student support along the way",
     body:
-      "<p>I like making technical things feel reachable for others — it sharpens how I explain my own work too.</p>",
+      "<p>I like making technical things feel reachable for others... it sharpens how I explain my own work too.</p>",
     bullets: [
-      "Tutor in Mathematics for Computer Science — preparation course for freshmen, building both foundations and connections (10–12/2020).",
-      "Student counselling for Cognitive Science — peer-to-peer guidance on course selection, schedules, exams, housing and funding (10/2018 – 03/2021)."
+      "Tutor in Mathematics for Computer Science: preparation course for freshmen, building both foundations and connections (10–12/2020).",
+      "Student counselling for Cognitive Science: peer-to-peer guidance on course selection, schedules, exams, housing and funding (10/2018 – 03/2021)."
     ],
     meta: H.meta([H.pill("Tübingen")])
   };
@@ -1046,7 +1045,7 @@
       if (!box || !box.classList.contains("has-groups")) return;
       var label = document.createElement("p");
       label.className = "gallery-label";
-      label.textContent = "Field photos — tap a shot to open it";
+      label.textContent = "Field photos: tap a shot to open it";
       box.insertBefore(label, box.firstChild);
     });
   }
